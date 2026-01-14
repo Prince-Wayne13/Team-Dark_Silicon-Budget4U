@@ -12,11 +12,7 @@ client = genai.Client(api_key=api_key)
 
 
 def gemini_transaction_parser(sms_data):
-    """
-    Parses financial SMS from Airtel, TNM, Banks (Standard, National, etc.), 
-    and Remittance (Mukuru, WorldRemit).
-    """
-    # Extract keys safely
+    
     message_content = sms_data.get('message') or sms_data.get('messages') or ""
     sender_name = sms_data.get('sender') or sms_data.get('senders') or "Unknown"
 
