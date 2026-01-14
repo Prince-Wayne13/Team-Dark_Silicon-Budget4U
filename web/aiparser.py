@@ -1,64 +1,77 @@
-from email import message
+import datetime
 import os
+import json
+import datetime
 from google import genai
 from dotenv import load_dotenv
 
-
 load_dotenv()
-api_key=os.getenv("GEMINI_API_KEY")
-if not api_key:
-    raise ValueError("No key found")
+
+api_key = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key)
 
-
-def gemini_transaction_parser(sms_data):
+def gemini_transaction_parser(sms_dict, uid):
+    """
+    Parses a dictionary of SMS messages into a structured financial JSON list.
+    """
     
-    message_content = sms_data.get('message') or sms_data.get('messages') or ""
-    sender_name = sms_data.get('sender') or sms_data.get('senders') or "Unknown"
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    # Convert dictionary to JSON string for the prompt
+    formatted_sms_data = json.dumps(sms_dict, indent=2)
 
     prompt = f"""
-    You are an expert financial data analyst specializing in Malawi's fintech ecosystem.
-    Your task is to extract transaction details from SMS messages.
+    Context: Expert Financial Analyst for Malawi (Airtel Money, TNM Mpamba, National Bank 626, Standard Bank 247).
+    Current Reference Time: {now}
+    User ID: {uid}
 
-    CONTEXT:
-    - Mobile Money: Airtel Money, TNM Mpamba , etc.
-    - Banks: Standard Bank (247), National Bank (626), FDH, MyBucks , etc.
-    - Remittance: Mukuru, HelloPaisa, WorldRemit , etc.
+    INPUT DATA:
+    {formatted_sms_data}
 
-    EXAMPLES FOR TRAINING:
-    1. BANK (Standard Bank): "Txn: Payment of MK50,000.00 from ACCT **123 to AGNESS MWIMANIWA on 14/01/2026 10:30. Ref: School Fees. Bal: MK120,000.00"
-       -> {{"source": "Standard Bank", "type": "BANK_TRANSFER", "direction": "OUTGOING", "amount": 50000.0}}
-    2. REMITTANCE (Mukuru): "Mukuru: Order 12345678 collected. Amount: MK85,000.00. Thank you for using Mukuru."
-       -> {{"source": "Mukuru", "type": "REMITTANCE", "direction": "INCOMING", "amount": 85000.0}}
+    YOUR TASKS:
+    1. FILTER: Ignore all non-financial messages (OTP codes, KYC updates, "Moto kuti Buu" promos, app registrations).
+    2. SOURCE MAPPING: 
+       - If sender is "626626" -> Source: "National Bank"
+       - If sender is "247" -> Source: "Standard Bank"
+       - Otherwise, use the Sender name (e.g., "AirtelMoney").
+    3. EXTRACTION: Convert messy dates (e.g., 14/01) into "YYYY-MM-DD HH:MM:SS" using the reference year 2026.
+    4. LOANS: Identify "Kutapa" or "Airtime loans" as type "LOAN".
 
-    SMS TO PARSE:
-    SENDER: {sender_name}
-    MESSAGE: {message_content}
-
-    STRICT JSON STRUCTURE:
+    STRICT OUTPUT FORMAT:
+    Return a JSON LIST of objects only. Each object must follow this structure:
     {{
-        "source": string,           // e.g., "AirtelMoney", "Standard Bank", "Mukuru"
-        "type": string,             // "CASH_OUT", "CASH_IN", "PAYMENT", "AIRTIME", "BANK_TRANSFER", "REMITTANCE"
-        "direction": string,        // "INCOMING", "OUTGOING", or null
-        "amount": float,            // Numeric only
-        "fees": float,              // Extract if mentioned, else 0.0
-        "currency": "MWK",          // Default to MWK for Malawi
-        "counterparty": string,     // Name of person/shop
-        "reference": string,        // Trans ID or Ref note
-        "timestamp": "YYYY-MM-DD HH:MM:SS",
-        "raw_text": string
+        "source": string,
+        "type": "CASH_OUT" | "CASH_IN" | "PAYMENT" | "AIRTIME" | "BANK_TRANSFER" | "REMITTANCE" | "LOAN",
+        "direction": "INCOMING" | "OUTGOING",
+        "amount": float,
+        "fees": float,
+        "currency": "MWK",
+        "counterparty": string,
+        "reference": string,
+        "timestamp": "YYYY-MM-DD HH:MM:SS"
     }}
 
-    Return ONLY the JSON. No conversational text.
+    If NO transactions are found in the data, return an empty list: [].
     """
 
-    response = client.models.generate_content(
-        model='gemini-2.5-flash-lite',
-        contents=prompt,
-        config={ "response_mime_type": "application/json" }
-    )
-    return response.text
+    try:
+        response = client.models.generate_content(
+            model='gemini-3-flash-preview',
+            contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+            }
+        )
+        
+        # Clean up and return the result
+        return response.text
+        
+    except Exception as e:
+        print(f"AI Parser Error: {e}")
+        return "[]" # Return empty list i hate 404s
+
+
 
 if __name__ == "__main__":
-    # Example usage
+    
     print(gemini_transaction_parser({"sender": "AirtelMoney", "message": "You have sent MK10,000.00 to John Doe. Ref: Rent. Fees: MK100.00. New balance: MK50,000.00"}))
