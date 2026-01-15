@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="transactions.css">
+    <link rel="stylesheet" href="modal.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
@@ -14,7 +15,7 @@
     <title>B4U | My Transactions</title>
 </head>
 <body class="inter-budget">
-    <div class="container">
+    <div class="container" id="container">
         <aside class="sidebar">
             <div class="logo">
                 <h2>BUDGET4U</h2>
@@ -46,11 +47,11 @@
                         <span>Review Transactions</span>
                         <img src="icons/review-file-svgrepo-com.svg" alt="Review icon">
                     </button>
-                    <button class="action-btn btn">
+                    <button class="action-btn btn" id="openBtn">
                         <span>Add Manual Entry</span>
                         <img src="icons/add-square-svgrepo-com.svg" alt="Add icon">
                     </button>
-                    <button class="action-btn btn">
+                    <button class="action-btn btn" id="openImport">
                         <span>Import from SMS/PDF</span>
                         <img src="icons/import-svgrepo-com.svg" alt="Import icon">
                     </button>
@@ -78,7 +79,7 @@
                         <td>50,000</td>
                         <td>
                             <div class="table-btn">
-                                <button class="btn-edit"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
+                                <button class="btn-edit" id="openEditTransaction"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
                                 <button class="btn-delete"><img src="icons/delete-1487-svgrepo-com.svg" alt="Delete"></button>
                             </div>
                         </td>
@@ -90,7 +91,7 @@
                         <td>50,000</td>
                         <td>
                             <div class="table-btn">
-                                <button class="btn-edit"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
+                                <button class="btn-edit" id="openEditTransaction"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
                                 <button class="btn-delete"><img src="icons/delete-1487-svgrepo-com.svg" alt="Delete"></button>
                             </div>
                         </td>
@@ -102,7 +103,7 @@
                         <td>12,500</td>
                         <td>
                             <div class="table-btn">
-                                <button class="btn-edit"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
+                                <button class="btn-edit" id="openEditTransaction"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
                                 <button class="btn-delete"><img src="icons/delete-1487-svgrepo-com.svg" alt="Delete"></button>
                             </div>
                         </td>
@@ -114,7 +115,7 @@
                         <td>8,300</td>
                         <td>
                             <div class="table-btn">
-                                <button class="btn-edit"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
+                                <button class="btn-edit" id="openEditTransaction"><img src="icons/edit-2-svgrepo-com.svg" alt="Edit"></button>
                                 <button class="btn-delete"><img src="icons/delete-1487-svgrepo-com.svg" alt="Delete"></button>
                             </div>
                         </td>
@@ -123,5 +124,92 @@
             </table>
         </main>
     </div>
+      <div class="hidden" id="modal-container">
+            <button id="closeBtn"><img src="icons/close-square-svgrepo-com.svg"></button>
+            <h2>Record a transaction</h2>
+            <form action="#" class="transaction-form">
+  <label for="amount">Amount (MWK)</label>
+  <input type="text" id="amount" placeholder="0.00" autofocus>
+
+  <label for="from-box">From (Box)</label>
+  <select id="from-box">
+    <option>Airtel Money</option>
+    <option>TNM Mpamba</option>
+    <option>FDH Bank</option>
+    <option>External Revenue</option>
+  </select>
+
+  <label for="to-box">To (Box)</label>
+  <select id="to-box">
+    <option>Transportation</option>
+    <option>Inventory</option>
+    <option>Shop Rent</option>
+    <option>Savings</option>
+  </select>
+
+  <label for="description">Description</label>
+  <input type="text" id="description" placeholder="e.g. Hired truck for furniture">
+
+  <label for="date">Transaction Date</label>
+  <input type="date" id="date" value="2026-01-15">
+
+  <button type="submit">Record</button>
+            </form>
+    </div>
+    <div class="hidden" id="import-modal">
+    <button id="closeImport"><img src="icons/close-square-svgrepo-com.svg"></button>
+    <h2>Import Transactions</h2>
+    <form action="#" class="transaction-form">
+        <label for="import-method">Import Method</label>
+        <select id="import-method">
+            <option>SMS History</option>
+            <option>Bank Statement (PDF)</option>
+            <option>Excel/CSV File</option>
+        </select>
+
+        <label for="file-upload">Upload File</label>
+        <input type="file" id="file-upload" accept=".pdf,.csv,.xlsx,.txt">
+
+        <label for="date-range-start">Date Range (Optional)</label>
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="date" id="date-range-start" placeholder="From">
+            <input type="date" id="date-range-end" placeholder="To">
+        </div>
+        <button type="submit">Import Transactions</button>
+    </form>
+</div>
+<div class="hidden" id="edit-transaction-modal">
+    <button id="closeEditTransaction"><img src="icons/close-square-svgrepo-com.svg"></button>
+    <h2>Edit Transaction</h2>
+    <form action="#" class="transaction-form">
+        <label for="edit-amount">Amount (MWK)</label>
+        <input type="text" id="edit-amount" value="50,000" autofocus>
+
+        <label for="edit-from">From (Box)</label>
+        <select id="edit-from">
+            <option selected>Airtel Money</option>
+            <option>TNM Mpamba</option>
+            <option>FDH Bank</option>
+            <option>External Revenue</option>
+        </select>
+
+        <label for="edit-to">To (Box)</label>
+        <select id="edit-to">
+            <option selected>Transportation</option>
+            <option>Inventory</option>
+            <option>Shop Rent</option>
+            <option>Savings</option>
+        </select>
+
+        <label for="edit-description">Description</label>
+        <input type="text" id="edit-description" value="Hired truck for furniture">
+
+        <label for="edit-date">Transaction Date</label>
+        <input type="date" id="edit-date" value="2026-01-15">
+
+        <button type="submit">Update Transaction</button>
+    </form>
+</div>
+    <script src="modalmagictransactions.js"></script>
 </body>
 </html>

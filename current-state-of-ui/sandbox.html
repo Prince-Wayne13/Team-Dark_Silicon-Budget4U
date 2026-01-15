@@ -13,7 +13,7 @@
     <title>B4U | My Boxes</title>
 </head>
 <body class="inter-budget">
-    <div class="container">
+    <div class="container" id="container">
         <aside class="sidebar">
             <div class="logo">
                 <h2>BUDGET4U</h2>
@@ -40,202 +40,168 @@
                     <h1>Sand Boxes</h1>
                 </div>
             </header>
-        <div class="modal-container">
-        <i class="fas fa-times close-btn"></i>
-            <h2 class="">Record Transaction</h2>
-        <form action="#">
-            <div class="input-group">
-                <label class="">Amount (MWK)</label>
-                <input type="text" class="styled-input amount-input" placeholder="0.00" autofocus>
-            </div>
-            <div class="flow-bridge">
-                <div class="flex-1">
-                    <label class="input-label !ml-0 text-center">From (Box)</label>
-                    <select class="styled-input !py-2 !text-xs">
-                        <option>Airtel Money</option>
-                        <option>TNM Mpamba</option>
-                        <option>FDH Bank</option>
-                        <option>External Revenue</option>
-                    </select>
-                </div>
-                <div class="text-slate-300 mt-4">
-                    <i class="fas fa-long-arrow-right text-xl"></i>
-                </div>
-                <div class="flex-1">
-                    <label class="input-label !ml-0 text-center">To (Box)</label>
-                    <select class="styled-input !py-2 !text-xs">
-                        <option>Transportation</option>
-                        <option>Inventory</option>
-                        <option>Shop Rent</option>
-                        <option>Savings</option>
-                    </select>
-                </div>
-            </div>
-            <div class="input-group">
-                <label class="input-label">Description</label>
-                <input type="text" class="styled-input" placeholder="e.g. Hired truck for furniture">
-            </div>
-            <div class="input-group">
-                <label class="input-label">Transaction Date</label>
-                <input type="date" class="styled-input" value="2026-01-17">
-            </div>
-            <button type="submit" class="btn-confirm">
-                Record
-            </button>
-        </form>
-    </div>
+       <button id="openBtn">Open</button>
         </main>
     </div>
+     <div class="hidden" id="modal-container">
+            <button id="closeBtn"><img src="icons/close-square-svgrepo-com.svg"></button>
+            <h2>Record a transaction</h2>
+            <form action="#" class="transaction-form">
+  <label for="amount">Amount (MWK)</label>
+  <input type="text" id="amount" placeholder="0.00" autofocus>
+
+  <label for="from-box">From (Box)</label>
+  <select id="from-box">
+    <option>Airtel Money</option>
+    <option>TNM Mpamba</option>
+    <option>FDH Bank</option>
+    <option>External Revenue</option>
+  </select>
+
+  <label for="to-box">To (Box)</label>
+  <select id="to-box">
+    <option>Transportation</option>
+    <option>Inventory</option>
+    <option>Shop Rent</option>
+    <option>Savings</option>
+  </select>
+
+  <label for="description">Description</label>
+  <input type="text" id="description" placeholder="e.g. Hired truck for furniture">
+
+  <label for="date">Transaction Date</label>
+  <input type="date" id="date" value="2026-01-15">
+
+  <button type="submit">Record</button>
+            </form>
+    </div>
+    <div class="hidden" id="edit-transaction-modal">
+    <button id="closeEditTransaction"><img src="icons/close-square-svgrepo-com.svg"></button>
+    <h2>Edit Transaction</h2>
+    <form action="#" class="transaction-form">
+        <label for="edit-amount">Amount (MWK)</label>
+        <input type="text" id="edit-amount" value="50,000" autofocus>
+
+        <label for="edit-from">From (Box)</label>
+        <select id="edit-from">
+            <option selected>Airtel Money</option>
+            <option>TNM Mpamba</option>
+            <option>FDH Bank</option>
+            <option>External Revenue</option>
+        </select>
+
+        <label for="edit-to">To (Box)</label>
+        <select id="edit-to">
+            <option selected>Transportation</option>
+            <option>Inventory</option>
+            <option>Shop Rent</option>
+            <option>Savings</option>
+        </select>
+
+        <label for="edit-description">Description</label>
+        <input type="text" id="edit-description" value="Hired truck for furniture">
+
+        <label for="edit-date">Transaction Date</label>
+        <input type="date" id="edit-date" value="2026-01-15">
+
+        <button type="submit">Update Transaction</button>
+    </form>
+    </div>
+    
     <style>
-  
-        .modal-container {
-            border: 1px solid black;
-            border-radius: 2.5rem;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.15);
-            padding: 2.5rem;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+ /* Using the lighter version of your background color */
 
-        .modal-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+}
 
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--slate-900);
-            letter-spacing: -0.05em;
-            margin: 0;
-        }
+.modal-container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid black;
+    padding: 1rem;
+    width:fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    z-index: 999;
+}
+.hidden{
+    display: none;
+}
+.blurred {
+  filter: blur(5px);
+  pointer-events: none; /* Prevents clicking background links while modal is open */
+}
 
-        .modal-subtitle {
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: var(--slate-400);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            margin-top: 0.25rem;
-        }
+button img{
+    width: 2rem;
+    height: 2rem;
+}
+.transaction-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
 
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
+/* Input & Select styling */
+.transaction-form input, 
+.transaction-form select {
+  padding: 10px;
+  background-color: #ffffff; /* White boxes pop against cream bg */
+  border: 1px solid #999;    /* Darker border for visibility */
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
 
-        .input-label {
-            display: block;
-            font-size: 0.65rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--slate-400);
-            margin-bottom: 0.5rem;
-            margin-left: 0.5rem;
-        }
+/* High visibility focus state */
+.transaction-form input:focus, 
+.transaction-form select:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
 
-        .label-center {
-            text-align: center;
-            margin-left: 0;
-        }
-
-        .styled-input {
-            width: 100%;
-            box-sizing: border-box;
-            background: white;
-            border: 1px solid var(--slate-200);
-            border-radius: 1.2rem;
-            padding: 0.8rem 1.2rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--slate-900);
-            transition: all 0.2s;
-        }
-
-        .styled-input:focus {
-            outline: none;
-            border-color: var(--indigo-600);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
-
-        .amount-input {
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-align: center;
-            letter-spacing: -0.02em;
-        }
-
-        .flow-bridge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1.5rem 0;
-            padding: 1rem;
-            background: rgba(0,0,0,0.03);
-            border-radius: 1.5rem;
-        }
-
-        .flex-1 {
-            flex: 1;
-        }
-
-        .bridge-icon {
-            color: var(--slate-300);
-            margin-top: 1rem;
-            font-size: 1.25rem;
-        }
-
-        .select-small {
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-            font-size: 0.75rem;
-        }
-
-        .btn-confirm {
-            background: var(--slate-900);
-            color: white;
-            width: 100%;
-            padding: 1.2rem;
-            border: none;
-            border-radius: 1.2rem;
-            font-weight: 900;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: 1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-confirm:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.4);
-            background: #1e293b;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            color: var(--slate-400);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .security-footer {
-            font-size: 10px;
-            text-align: center;
-            color: var(--slate-400);
-            font-weight: 800;
-            margin-top: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+/* Button styling */
+.transaction-form button {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #222; /* Dark button for high contrast */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
     </style>
+    <script>
+const openBtn = document.getElementById('openBtn');
+const closeBtn = document.getElementById('closeBtn');
+const modal = document.getElementById('modal-container');
+const container = document.getElementById('container');
+
+// Open Modal
+openBtn.addEventListener('click', () => {
+  modal.classList.remove('hidden');
+  modal.classList.add('modal-container');
+  container.classList.add('blurred');
+});
+
+// Close Modal
+closeBtn.addEventListener('click', () => {
+  modal.classList.remove('modal-container');
+  modal.classList.add('hidden');
+  container.classList.remove('blurred');
+});
+        </script>
 </body>
 </html>
