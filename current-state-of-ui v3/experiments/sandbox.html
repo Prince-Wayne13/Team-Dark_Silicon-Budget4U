@@ -1,0 +1,58 @@
+<!-- Chat Input Box -->
+<div class="chat-input-container">
+    <input type="text" id="chatInput" class="chat-input" placeholder="Ask me anything about your finances...">
+    <button id="sendBtn" class="send-btn">
+        <img src="icons/send.svg" alt="Send">
+    </button>
+</div>
+
+<style>
+.chat-input-container {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem;
+    background-color: white;
+    border-top: 1px solid #ddd;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 24px;
+    font-size: 1rem;
+    outline: none;
+    font-family: inherit;
+}
+
+.chat-input:focus {
+    border-color: #A7C1A8;
+}
+
+.send-btn {
+    width: 48px;
+    height: 48px;
+    background-color: #A7C1A8;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.send-btn:hover {
+    background-color: #96b097;
+}
+
+.send-btn img {
+    width: 20px;
+    height: 20px;
+}
+</style>
