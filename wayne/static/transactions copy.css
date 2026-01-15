@@ -1,0 +1,83 @@
+.search-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-container img{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.search-container button{
+    margin-left: 0.5rem;
+	background-color: #BBDCE5;
+    border: 1px solid black;
+    
+}
+.search-bar {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+.transaction-actions{
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    justify-content: space-between;
+}
+.action-btn img{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.action-btn{
+    background-color: #A7C1A8;
+}
+table {
+	text-align: left;
+	border-collapse: collapse;
+}
+
+tr {
+	border-bottom: 1px solid;
+}
+
+thead {
+	border-block-end: 2px solid;
+	background: #BBDCE5;
+}
+
+tbody > tr:nth-of-type(even) {
+  background-color: #EEEFE0;
+}
+
+th,
+td {
+	border: 1px solid lightgrey;
+	padding: 0.25rem 0.75rem;
+}
+.table-btn{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+table button{
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+table button img{
+    width: 1rem;
+    height: 1rem;
+}

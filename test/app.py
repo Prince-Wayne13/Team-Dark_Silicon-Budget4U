@@ -1,20 +1,31 @@
 import firebase_admin
-from firebase_admin import credentials, auth, db
+from firebase_admin import credentials, auth, db, firestore
 import requests
-from flask import Flask, request, session, render_template, redirect, url_for
+from flask import Flask, request, session, render_template, redirect, url_for, jsonify
 
+
+
+# --- FLASK APP SETUP ---
 app = Flask(__name__)
 app.secret_key = "YOUR_SUPER_SECRET_FLASK_KEY"
 
-# 1. Initialize Firebase Admin SDK
+# --- INITIALIZATION ---
 cred = credentials.Certificate(r"D:\Backup folder\Code\GitHub\Team-Dark_Silicon-Budget4U\test\serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://trial-31bb9-default-rtdb.firebaseio.com/'
 })
 
-# 2. Web API Key for Auth
+
+db_fs = firestore.client()  
+rtdb_root = db.reference()  
 FIREBASE_WEB_API_KEY = "AIzaSyB0Ty2tiRNQq0hZNPnYBYhbM7VmBUouFtM" 
 
+
+
+
+
+
+# --- FLASK ROUTES ---  
 @app.route('/')
 def login_page():
     return render_template('login.html')
@@ -38,6 +49,7 @@ def signup():
             'email': email,
             'balance': 0,
         })
+        
         
         # 3. Trigger the verification email
         # We use the REST API to send the actual email to the user's inbox
@@ -72,26 +84,58 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
     
-    # Verify credentials via REST API
+    # 1. Verify credentials via Google Identity REST API
+    # (Since Firebase Admin SDK doesn't handle password verification directly)
     auth_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_WEB_API_KEY}"
-    payload = {"email": email, "password": password, "returnSecureToken": True}
+    payload = {
+        "email": email, 
+        "password": password, 
+        "returnSecureToken": True
+    }
     
-    response = requests.post(auth_url, json=payload)
-    data = response.json()
+    try:
+        response = requests.post(auth_url, json=payload)
+        data = response.json()
 
-    if response.status_code == 200:
-        user_id = data['localId']
-        
-        # Check verification status BEFORE allowing the session to start
-        user_record = auth.get_user(user_id)
-        if not user_record.email_verified:
-            return "Email not verified. Please check your inbox!", 403
+        if response.status_code == 200:
+            user_id = data['localId']
             
-        session['user_id'] = user_id
-        return "Success", 200
-    else:
-        return "Invalid Email or Password", 401
+            # 2. Check if the user has verified their email
+            user_record = auth.get_user(user_id)
+            if not user_record.email_verified:
+                return "Email not verified. Please check your inbox!", 403
+            
+            # 3. THE SYNC STEP (Integrated from your second script)
+            # This ensures the Firestore document exists/is updated upon login
+            try:
+                # We use 'db_fs' to match your Transaction API handles
+                user_ref = db_fs.collection('Transactions').document(user_id)
+                
+                # Write to Firestore to ensure the user "folder" is active
+                user_ref.set({
+                    'last_sync': firestore.SERVER_TIMESTAMP,
+                    'status': 'active',
+                    'email': email
+                }, merge=True)
+                
+                print(f"Successfully synced UID {user_id} to Firestore.")
+            except Exception as sync_error:
+                # We log the error but allow login to continue 
+                # so the user isn't locked out by a database sync glitch
+                print(f"Firestore Sync Warning: {sync_error}")
 
+            # 4. Establish the Flask Session
+            session['user_id'] = user_id
+            return "Success", 200
+
+        else:
+            # Handle incorrect password or user not found
+            error_message = data.get('error', {}).get('message', 'Invalid Credentials')
+            return f"Login failed: {error_message}", 401
+
+    except Exception as e:
+        return f"An internal error occurred: {str(e)}", 500
+    
 @app.route('/dashboard')
 def dashboard():
     # 1. Check if they are even logged into the Flask session
@@ -122,5 +166,45 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('login_page'))
 
+
+
+# --- DATABASE API ROUTES  ---
+
+# CREATE & UPDATE
+@app.route('/api/transactions', methods=['POST'])
+def add_transaction():
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
+    
+    data = request.json
+    # 1. Add to Firestore History
+    doc_ref = db_fs.collection('Transactions').document(uid).collection('history').document()
+    doc_ref.set({
+        'item': data['item'],
+        'amount': float(data['amount']),
+        'timestamp': firestore.SERVER_TIMESTAMP
+    })
+    
+    # 2. Update RTDB Balance
+    user_ref = db.reference(f'users/{uid}')
+    balance = user_ref.get().get('balance', 0) - float(data['amount'])
+    user_ref.update({'balance': balance})
+    
+    return jsonify({"success": True, "id": doc_ref.id})
+
+# READ
+@app.route('/api/transactions', methods=['GET'])
+def get_transactions():
+    uid = session.get('user_id')
+    docs = db_fs.collection('Transactions').document(uid).collection('history').order_by('timestamp', direction='DESCENDING').stream()
+    history = [{**doc.to_dict(), "id": doc.id} for doc in docs]
+    return jsonify(history)
+
+# DELETE
+@app.route('/api/transactions/<doc_id>', methods=['DELETE'])
+def delete_transaction(doc_id):
+    uid = session.get('user_id')
+    db_fs.collection('Transactions').document(uid).collection('history').document(doc_id).delete()
+    return jsonify({"success": True})
 if __name__ == '__main__':
     app.run(debug=True)
