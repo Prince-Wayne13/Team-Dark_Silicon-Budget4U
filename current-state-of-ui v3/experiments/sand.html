@@ -1,0 +1,26 @@
+
+
+    
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+
+        // Function to add a message and scroll to bottom
+        function addMsg(text, type) {
+            const div = document.createElement('div');
+            div.className = `msg ${type}`;
+            div.innerText = text;
+            chatBox.appendChild(div);
+            
+            // Keep scroll at the bottom
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Fill with dummy messages to demonstrate scroll
+        for (let i = 1; i <= 15; i++) {
+            addMsg("Message " + i, i % 2 === 0 ? "user" : "bot");
+        }
+    </script>
+
+</body>
+</html>
