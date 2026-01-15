@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='transactions.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>B4U | My Transactions</title>
+</head>
+<body class="inter-budget">
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>BUDGET4U</h2>
+                <p>Your pocket accountant!</p>
+            </div>
+            <nav>
+                <a href="{{ url_for('index') }}" >Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}" alt="Dashboard icon"></a>
+                <a href="{{ url_for('transactions') }}" class="active" >My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}" alt="Transactions icon"></a>
+                <a href="{{ url_for('boxes') }}">My Boxes
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25
+                    </svg>
+                </a>
+                <a href="#">Settings 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                </a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header-section">
+                <div class="header-text fraunces-budget">
+                    <h1>My Transactions</h1>
+                    <p>Here's a list of your last transaction history...</p>
+                </div>
+                <div class="transaction-actions">
+                    <button class="action-btn btn">
+                        <span>Review Transactions</span>
+                        <img src="{{ url_for('static', filename='icons/review-file-svgrepo-com.svg') }}" alt="Review icon">
+                    </button>
+                    <button class="action-btn btn">
+                        <span>Add Manual Entry</span>
+                        <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}" alt="Add icon">
+                    </button>
+                    <button class="action-btn btn">
+                        <span>Import from SMS/PDF</span>
+                        <img src="{{ url_for('static', filename='icons/import-svgrepo-com.svg') }}" alt="Import icon">
+                    </button>
+                </div>
+            </header>
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search transactions...">
+                <button class="btn"><img src="{{ url_for('static', filename='icons/search-svgrepo-com.svg') }}" alt="Search Icon"></button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Date and Time</th>
+                        <th scope="col">From/To</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>17/01/2026</td>
+                        <td>Airtel Money -> Transportation</td>
+                        <td>Hired a truck to move furniture</td>
+                        <td>50,000</td>
+                        <td>
+                            <div class="table-btn">
+                                <button class="btn-edit"><img src="{{ url_for('static', filename='icons/edit-2-svgrepo-com.svg') }}" alt="Edit"></button>
+                                <button class="btn-delete"><img src="{{ url_for('static', filename='icons/delete-1487-svgrepo-com.svg') }}" alt="Delete"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>17/01/2026</td>
+                        <td>Airtel Money -> Transportation</td>
+                        <td>Hired a truck to move furniture</td>
+                        <td>50,000</td>
+                        <td>
+                            <div class="table-btn">
+                                <button class="btn-edit"><img src="{{ url_for('static', filename='icons/edit-2-svgrepo-com.svg') }}" alt="Edit"></button>
+                                <button class="btn-delete"><img src="{{ url_for('static', filename='icons/delete-1487-svgrepo-com.svg') }}" alt="Delete"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>16/01/2026</td>
+                        <td>Cash -> Food & Dining</td>
+                        <td>Groceries at Shoprite</td>
+                        <td>12,500</td>
+                        <td>
+                            <div class="table-btn">
+                                <button class="btn-edit"><img src="{{ url_for('static', filename='icons/edit-2-svgrepo-com.svg') }}" alt="Edit"></button>
+                                <button class="btn-delete"><img src="{{ url_for('static', filename='icons/delete-1487-svgrepo-com.svg') }}" alt="Delete"></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>15/01/2026</td>
+                        <td>Bank Transfer -> Utilities</td>
+                        <td>Electricity bill payment</td>
+                        <td>8,300</td>
+                        <td>
+                            <div class="table-btn">
+                                <button class="btn-edit"><img src="{{ url_for('static', filename='icons/edit-2-svgrepo-com.svg') }}" alt="Edit"></button>
+                                <button class="btn-delete"><img src="{{ url_for('static', filename='icons/delete-1487-svgrepo-com.svg') }}" alt="Delete"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

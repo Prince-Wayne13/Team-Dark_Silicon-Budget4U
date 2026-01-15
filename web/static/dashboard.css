@@ -1,0 +1,56 @@
+/* ===================
+   DASHBOARD OVERVIEW GRID
+   =================== */
+.overview-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 2rem;
+    grid-template-areas: 
+        "income expenditure daily daily"
+        "category category daily daily"
+        "reports transaction ai ai"
+        "none none ai ai";
+}
+
+/* ===================
+   DASHBOARD CARDS
+   =================== */
+.income-card {
+    grid-area: income;
+    background-color: #c8e6c9;
+}
+
+.expenditure-card {
+    grid-area: expenditure;
+    background-color: #ffccbc;
+}
+
+.daily-expenditure-card {
+    grid-area: daily;
+    background-color: #f5f5f5;
+}
+
+.category-breakdown-card {
+    grid-area: category;
+    background-color: #f5f5f5;
+}
+
+/* ===================
+   DASHBOARD BUTTONS
+   =================== */
+.reports-btn {
+    grid-area: reports;
+    background-color: #BBDCE5;
+}
+
+.add-transaction-btn {
+    grid-area: transaction;
+    background-color: #BBDCE5;
+}
+
+.ai-advisor-btn {
+    margin: 0rem 5rem;
+    grid-area: ai;
+    background-color: #A7C1A8;
+}
