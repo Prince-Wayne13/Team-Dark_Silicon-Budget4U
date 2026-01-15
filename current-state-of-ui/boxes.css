@@ -1,0 +1,164 @@
+.info-box img{
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.125rem;
+}
+.info-box{
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background-color: #EEEFE0;
+    border-left: 4px solid #A7C1A8;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.info-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.info-text strong {
+    color: #3e3300;
+}
+
+.learn-more-inline {
+    color: gray;
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.5rem;
+}
+
+.learn-more-inline:hover {
+    text-decoration: underline;
+}
+.action-btn img{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.action-btn{
+    background-color: #A7C1A8;
+}
+.box-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+.the-box {
+    background: white;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+}
+.the-box button{
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.box-type-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #9e9e9e;
+}
+
+.box-settings img,svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.box-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 1.5rem 0;
+}
+
+.box-total {
+    margin-bottom: 1.5rem;
+}
+
+.total-label {
+    font-size: 0.5rem;
+    font-weight: 600;
+    color: #a0aec0;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.total-amount-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.total-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.box-flow {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.flow-item {
+    flex: 1;
+    padding: 1rem;
+}
+
+.flow-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #a0aec0;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.flow-amount {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.positive {
+    color: #4caf50;
+}
+
+.negative {
+    color: #f44336;
+}
+
+.box-footer {
+    padding-top: 1rem;
+    border-top: 2px solid #edf2f7;
+}
+
+.view-history {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #718096;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.view-history img {
+    width: 1rem;
+    height: 1rem;
+}
