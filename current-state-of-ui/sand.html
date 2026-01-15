@@ -1,0 +1,119 @@
+<!-- CREATE BOX MODAL -->
+<button id="openEditBox">Edit Box</button>
+<button id="openEditTransaction">Edit Transaction</button>
+<button id="openImport">Import Transactions</button>
+
+<div class="hidden" id="create-box-modal">
+    <button id="closeCreateBox"><img src="icons/close-square-svgrepo-com.svg"></button>
+    <h2>Create a New Box</h2>
+    <form action="#" class="transaction-form">
+        <label for="box-name">Box Name</label>
+        <input type="text" id="box-name" placeholder="e.g. Shop Rent" autofocus>
+
+        <label for="box-category">Category</label>
+        <select id="box-category">
+            <option>Asset</option>
+            <option>Liability</option>
+            <option>Revenue</option>
+            <option>Expense</option>
+        </select>
+
+        <label for="box-budget">Monthly Budget (Optional)</label>
+        <input type="text" id="box-budget" placeholder="MK 0.00">
+
+        <label for="box-description">Description (Optional)</label>
+        <input type="text" id="box-description" placeholder="e.g. Monthly rent payments">
+
+        <button type="submit">Create Box</button>
+    </form>
+</div>
+
+<!-- EDIT BOX MODAL -->
+<div class="hidden" id="edit-box-modal">
+    <button id="closeEditBox"><img src="icons/close-square-svgrepo-com.svg"></button>
+    <h2>Edit Box</h2>
+    <form action="#" class="transaction-form">
+        <label for="edit-box-name">Box Name</label>
+        <input type="text" id="edit-box-name" value="Airtel Money">
+
+        <label for="edit-box-category">Category</label>
+        <select id="edit-box-category">
+            <option selected>Asset</option>
+            <option>Liability</option>
+            <option>Revenue</option>
+            <option>Expense</option>
+        </select>
+
+        <label for="edit-box-budget">Monthly Budget</label>
+        <input type="text" id="edit-box-budget" value="MK 50,000">
+
+        <label for="edit-box-description">Description</label>
+        <input type="text" id="edit-box-description" value="Mobile money wallet">
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+
+<!-- EDIT TRANSACTION MODAL -->
+<div class="hidden" id="edit-transaction-modal">
+    <button id="closeEditTransaction"><img src="icons/close-square-svgrepo-com.svg"></button>
+    <h2>Edit Transaction</h2>
+    <form action="#" class="transaction-form">
+        <label for="edit-amount">Amount (MWK)</label>
+        <input type="text" id="edit-amount" value="50,000" autofocus>
+
+        <label for="edit-from">From (Box)</label>
+        <select id="edit-from">
+            <option selected>Airtel Money</option>
+            <option>TNM Mpamba</option>
+            <option>FDH Bank</option>
+            <option>External Revenue</option>
+        </select>
+
+        <label for="edit-to">To (Box)</label>
+        <select id="edit-to">
+            <option selected>Transportation</option>
+            <option>Inventory</option>
+            <option>Shop Rent</option>
+            <option>Savings</option>
+        </select>
+
+        <label for="edit-description">Description</label>
+        <input type="text" id="edit-description" value="Hired truck for furniture">
+
+        <label for="edit-date">Transaction Date</label>
+        <input type="date" id="edit-date" value="2026-01-15">
+
+        <button type="submit">Update Transaction</button>
+    </form>
+</div>
+
+<!-- IMPORT VIA SMS/PDF MODAL -->
+<div class="hidden" id="import-modal">
+    <button id="closeImport"><img src="icons/close-square-svgrepo-com.svg"></button>
+    <h2>Import Transactions</h2>
+    <form action="#" class="transaction-form">
+        <label for="import-method">Import Method</label>
+        <select id="import-method">
+            <option>SMS History</option>
+            <option>Bank Statement (PDF)</option>
+            <option>Excel/CSV File</option>
+        </select>
+
+        <label for="file-upload">Upload File</label>
+        <input type="file" id="file-upload" accept=".pdf,.csv,.xlsx,.txt">
+
+        <label for="date-range-start">Date Range (Optional)</label>
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="date" id="date-range-start" placeholder="From">
+            <input type="date" id="date-range-end" placeholder="To">
+        </div>
+
+        <label style="display: flex; align-items: center; margin-top: 12px;">
+            <input type="checkbox" id="auto-categorize" checked style="width: auto; margin-right: 8px;">
+            Auto-categorize transactions using AI
+        </label>
+
+        <button type="submit">Import Transactions</button>
+    </form>
+</div>
