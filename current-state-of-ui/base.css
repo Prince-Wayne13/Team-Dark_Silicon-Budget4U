@@ -32,7 +32,7 @@
     display: grid;
     grid-template-columns: 2fr 7fr;
     min-height: 100vh;
-    background-color: #FCF9EA;
+    background-color: #FBFBF8;
 }
 
 /* ===================
@@ -144,4 +144,5 @@
     width: 50px;
     height: 50px;
     margin-left: 0.5rem;
+
 }
