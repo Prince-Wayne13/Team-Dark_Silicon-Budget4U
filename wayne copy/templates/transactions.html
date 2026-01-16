@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='transactions.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='modal.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces&family=Inter&display=swap" rel="stylesheet">
+    <title>B4U | My Transactions</title>
+</head>
+
+<body class="inter-budget">
+    <div class="container" id="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>BUDGET4U</h2>
+                <p>Your pocket accountant!</p>
+            </div>
+            <nav>
+                <a href="{{ url_for('dashboard') }}">Dashboard <img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('transactions') }}" class="active">My Transactions <img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('boxes') }}">My Boxes</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header-section">
+                <div class="header-text fraunces-budget">
+                    <h1>My Transactions</h1>
+                    <p>Manage your latest financial history...</p>
+                </div>
+
+                <div class="transaction-actions">
+                    <button class="action-btn btn" onclick="openActionModal('review')">
+                        <span>Review Transactions</span>
+                        <img src="{{ url_for('static', filename='icons/review-file-svgrepo-com.svg') }}">
+                    </button>
+                    <button class="action-btn btn" id="openBtn" onclick="openActionModal('add')">
+                        <span>Add Manual Entry</span>
+                        <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}">
+                    </button>
+                    <button class="action-btn btn" onclick="loadTransactions()">
+                        <span>Refresh</span>
+                        <img src="{{ url_for('static', filename='icons/refresh-svgrepo-com.svg') }}">
+                    </button>
+                    <button class="action-btn btn" onclick="openActionModal('import')">
+                        <span>Import from SMS/PDF</span>
+                        <img src="{{ url_for('static', filename='icons/import-svgrepo-com.svg') }}">
+                    </button>
+                </div>
+            </header>
+
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search transactions...">
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th>Source</th>
+                        <th>Direction</th>
+                        <th>Amount (MK)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-body">
+                    </tbody>
+            </table>
+        </main>
+    </div>
+
+    <div id="masterModal" class="hidden">
+        <div class="modal-content">
+            <button id="closeBtn" onclick="closeMasterModal()">
+                <img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}">
+            </button>
+            <h2 id="modalHeaderTitle">Record a transaction</h2>
+            <hr>
+            
+            <div id="dynamicModalBody">
+                </div>
+
+            <div style="margin-top: 20px; text-align: right;">
+                <button id="modalPrimaryBtn" class="btn" style="background: #2ecc71; color: white; padding: 10px 20px; border-radius: 8px;">Action</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='testing.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='loginStyle.css') }}">
+    <title>Budget4U - Sign In</title>
+</head>
+<body>
+    <div class="loginBox">
+        <div class="loginHeader">
+            <header>Sign IN</header>
+        </div>
+        
+        <div id="error-msg" style="color: #d9534f; font-size: 14px; margin-bottom: 10px; height: 20px;"></div>
+
+        <div class="inputBox">
+            <input type="text" id="email" class="inputField" placeholder="Email" autocomplete="off" required>
+        </div>
+        <div class="inputBox">
+            <input type="password" id="password" class="inputField" placeholder="Password" autocomplete="off" required>
+        </div>
+        
+        <div class="forgot">
+            <section>
+                <input type="checkbox" id="check">
+                <label for="check">Remember Me</label>
+            </section>
+            <section>
+                <a href="#">Forgot Password?</a>
+            </section>
+        </div>
+
+        <div class="inputSubmit">
+            <button type="submit" id="loginBtn" class="submitBtn">Jump In</button>
+        </div>
+
+        <div class="signUp">
+            <p>Don't have an account? <a href="{{ url_for('signup_page') }}">Sign Up</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-msg');
+
+            if (!email || !password) {
+                errorDiv.innerText = "Please fill in all fields.";
+                return;
+            }
+
+            errorDiv.style.color = "#555";
+            errorDiv.innerText = "Verifying...";
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                });
+
+                if (response.ok) {
+                    window.location.href = "/dashboard";
+                } else {
+                    const errorText = await response.text();
+                    errorDiv.style.color = "#d9534f";
+                    errorDiv.innerText = errorText;
+                }
+            } catch (error) {
+                errorDiv.innerText = "Server unreachable.";
+            }
+        });
+    </script>
+</body>
+</html>

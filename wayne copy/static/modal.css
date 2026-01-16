@@ -1,0 +1,133 @@
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+}
+
+.modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid black;
+    padding: 2rem;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    z-index: 999;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.blurred {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+button img {
+    width: 2rem;
+    height: 2rem;
+}
+
+.transaction-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+
+.transaction-form input, 
+.transaction-form select {
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #999;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.transaction-form input:focus, 
+.transaction-form select:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.transaction-form button[type="submit"] {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.transaction-form button[type="submit"]:hover {
+    background-color: #000;
+}
+/* Container for the modal when active */
+.modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    width: 90%;
+    max-width: 420px; /* Forces it to stay a reasonable size */
+    max-height: 90vh;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+/* Ensure the Close Button is clickable and correctly placed */
+#closeBtn, #closeEditTransaction {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#closeBtn img {
+    width: 24px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+#closeBtn:hover img {
+    opacity: 1;
+}
+
+/* Background Blur */
+.blurred {
+    filter: blur(8px);
+    pointer-events: none;
+    user-select: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Style for Direction Badges in Table */
+.badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+.badge.positive { background: #dcfce7; color: #166534; }
+.badge.negative { background: #fee2e2; color: #991b1b; }

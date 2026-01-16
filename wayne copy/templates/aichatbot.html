@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icons/budget-svgrepo-com.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='aichatbot.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>B4U | Chatbot</title>
+</head>
+<body class="inter-budget">
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>BUDGET4U</h2>
+                <p>Your pocket accountant!</p>
+            </div>
+            <nav>
+                <a href="{{ url_for('index') }}" class="active">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}" alt="Dashboard icon"></a>
+                <a href="{{ url_for('transactions') }}">My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}" alt="Transactions icon"></a>
+                <a href="{{ url_for('boxes') }}">My Boxes
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 0 0 0-.16.832V12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 12V9.832c0-.287-.055-.57-.16-.832M2.41 9a2.25 2.25 0 0 1 .382-.632l3.285-3.832a2.25 2.25 0 0 1 1.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5 20.25h15A2.25 2.25 0 0 0 21.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
+                </a>
+                <a href="#">Settings 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                </a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <a href="{{ url_for('index') }}" class="back-link"><img src="{{ url_for('static', filename='icons/back-svgrepo-com.svg') }}"><span>Back to Dashboard</span></a>  
+            <header class="header-section">
+                <div class="header-text fraunces-budget">
+                    <h1>Zikutheka Robert?</h1>
+                    <p>I'm your AI financial advisor. Lets talk about those numbers...</p>
+                </div>
+            </header>
+             <h3 class="chatbot-actions-title">Quick actions</h3>
+            <div class="chatbot-actions">
+                <button class="action-btn btn" id="income-statement-action">
+                    <span>Generate Income Statement</span>
+                    <img src="{{ url_for('static', filename='icons/review-file-svgrepo-com.svg') }}" alt="Review icon">
+                </button>
+                <button class="action-btn btn" id="budget-action">
+                    <span>Create Budget</span>
+                    <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}" alt="Add icon">
+                </button>
+                <button class="action-btn btn" id="forecast-action">
+                    <span>Create forecast</span>
+                    <img src="{{ url_for('static', filename='icons/import-svgrepo-com.svg') }}" alt="Import icon">
+                </button>
+            </div>
+            <div class="chat-box">
+                <div class="user msg">Hello there, whats my average rent expense?</div>
+                <div class="bot msg">About 1ook per month</div>
+
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Ask me anything about your finances...">
+                <button id="sendBtn" class="send-btn"><img src="{{ url_for('static', filename='icons/send-svgrepo-com.svg') }}" alt="Send"></button>
+            </div>
+        </main>
+    </div>
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    </script>
+</body>
+</html>
