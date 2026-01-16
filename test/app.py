@@ -154,19 +154,21 @@ def help():
 def get_transactions():
     uid = session.get('user_id')
     if not uid: return jsonify({"error": "Unauthorized"}), 401
-    
+    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2"
     try:
-        docs = db_fs.collection('Transactions').document(uid).collection('TransIDs').order_by('Date', direction='DESCENDING')
-        docs = docs.stream()
+        docs = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs').order_by('Date', direction='DESCENDING').stream()
+        
         history = []
         for doc in docs:
             data = doc.to_dict()
+            
+            # Mapping your specific database fields to what JS expects
             transaction = {
                 "id": doc.id,
                 "amount": data.get('Amount', 0),
-                "fromTo": data.get('Source', 'N/A'),
-                "description": data.get('Reference', 'N/A'),
-                "direction": data.get('Direction', 'N/A'),
+                "fromTo": data.get('Source', 'N/A'), # Using Source as 'fromTo'
+                "description": data.get('Reference', 'N/A'), # Using Reference as desc
+                'Direction': data.get('Direction', 'Inbound'),
                 "date": data.get('Date', 'N/A')
             }
             history.append(transaction)
@@ -179,20 +181,22 @@ def get_transactions():
 def add_transaction():
     uid = session.get('user_id')
     if not uid: return jsonify({"error": "Unauthorized"}), 401
-    data = request.json
     
+    data = request.json
     try:
-        history_ref = db_fs.collection('Transactions').document(uid).collection('TransIDs')
+        history_ref = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs')
         new_doc_ref = history_ref.document()
+        
+        # We Map the JS keys (left) to your Firestore fields (right)
         new_doc_ref.set({
-            'Date': data.get('Date'),
-            'Source': data.get('Source'),
-            'Reference': data.get('Reference'),
-            'Amount': float(data.get('Amount', 0)),
-            'Direction': data.get('Direction', 'Inbound'),
+            'Date': data.get('date'),
+            'Source': data.get('fromTo'),
+            'Reference': data.get('description'),
+            'Amount': float(data.get('amount', 0)),
+            'Direction': data.get('direction').upper(), # Save as INBOUND/OUTBOUND
             'timestamp': firestore.SERVER_TIMESTAMP
         })
-        return jsonify({"success": True, "id": new_doc_ref.id})
+        return jsonify({"success": True})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
@@ -231,7 +235,6 @@ def update_transaction():
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
     uid = session.get('user_id')
-    #uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2"
     if not uid: return jsonify({"error": "Unauthorized"}), 401
     try:
         docs = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs').stream()

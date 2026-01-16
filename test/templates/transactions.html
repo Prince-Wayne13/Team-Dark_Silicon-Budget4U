@@ -86,17 +86,19 @@
             </div>
 
             <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Reference</th>
-                        <th>Source</th>
-                        <th>Direction</th> <th>Amount (MK)</th>
-                    </tr>
-                </thead>
-                <tbody id="transaction-body">
-                    </tbody>
-            </table>
+                <table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Reference</th>
+            <th>Source</th>
+            <th>Direction</th> 
+            <th>Amount (MK)</th>
+            <th>Actions</th> </tr>
+    </thead>
+    <tbody id="transaction-body">
+    </tbody>
+</table>
         </main>
     </div>
 
@@ -110,76 +112,73 @@
         const amountInput = document.getElementById("amountInput");
 
         
-        async function loadTransactions() {
-                            console.log("Fetching transactions...");
-                            try {
-                                const response = await fetch('/api/transactions');
-                                const transactions = await response.json();
-                                
-                                const tableBody = document.getElementById("transaction-table-body");
-                                tableBody.innerHTML = ""; 
-
-                                transactions.forEach(data => {
-                                    const row = document.createElement("tr");
-                                    
-                                    // Matches the keys we just defined in the Python 'transaction' dictionary
-                                    row.innerHTML = `
-                                        <td>${data.date}</td>
-                                        <td>${data.fromTo}</td>
-                                        <td>${data.description}</td>
-                                        <td>${Number(data.amount).toLocaleString()}</td>
-                                        <td>
-                                            <button onclick="deleteTransaction('${data.id}')" style="border:none; background:none; cursor:pointer;">🗑️</button>
-                                        </td>
-                                    `;
-                                    tableBody.appendChild(row);
-                                });
-                                console.log("Table updated with", transactions.length, "entries.");
-                            } catch (error) {
-                                console.error("JS Load Error:", error);
-                            }
-                        }
         
-      
-        async function saveTransaction() {
-            const date = dateInput.value;
-            const fromToRaw = fromToInput.value.trim();
-            const description = descriptionInput.value.trim();
-            const amount = amountInput.value;
-
-            if (!date || !fromToRaw || !description || !amount) {
-                alert("Please fill in all fields");
-                return;
-            }
-
+     async function loadTransactions() {
+            const response = await fetch('/api/transactions');
+            const data = await response.json();
+            const tableBody = document.getElementById('transaction-body');
             
-            const payload = {
-                "Date": date,
-                "Source": fromToRaw,
-                "Reference": description,
-                "Amount": parseFloat(amount) // Ensure it's a number
-            };
+            tableBody.innerHTML = ''; 
 
-            try {
-                const response = await fetch('/api/transactions', {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    clearInputs();
-                    closeModal();
-                    loadTransactions(); // Refresh the table
-                } else {
-                    const errorData = await response.json();
-                    alert("Failed to save: " + (errorData.error || "Unknown error"));
-                }
-            } catch (error) {
-                console.error("Error saving:", error);
-            }
+            data.forEach(trans => {
+                const row = `<tr>
+                    <td>${trans.date}</td>
+                    <td>${trans.description}</td>
+                    <td>${trans.fromTo}</td>
+                    <td style="color: ${trans.Direction === 'INCOMING' ? 'green' : 'red'}; font-weight: bold;">
+                        ${trans.Direction}
+                    </td>
+                    <td>${trans.amount.toLocaleString()}</td>
+                    <td>
+                        <button onclick="deleteTransaction('${trans.id}')" style="background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
         }
 
+      
+        async function saveTransaction() {
+    const date = dateInput.value;
+    const fromToRaw = fromToInput.value.trim();
+    const description = descriptionInput.value.trim();
+    const amount = amountInput.value;
+    const direction = document.getElementById("directionInput").value; // Grab the dropdown value
+
+    if (!date || !fromToRaw || !description || !amount) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    const payload = {
+        "date": date,           // Lowercase to match standard Flask handling
+        "fromTo": fromToRaw,
+        "description": description,
+        "amount": parseFloat(amount),
+        "direction": direction  // Sending 'Inbound' or 'Outbound'
+    };
+
+    try {
+        const response = await fetch('/api/transactions', {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            clearInputs();
+            closeModal();
+            // Important: Wait a split second for Firestore to update before refreshing
+            setTimeout(loadTransactions, 500); 
+        } else {
+            alert("Save failed on server.");
+        }
+    } catch (error) {
+        console.error("Error saving:", error);
+    }
+}
         // 3. DELETE: Calls your Flask Delete route
         async function deleteTransaction(id) {
             // id here is the Firestore document ID
