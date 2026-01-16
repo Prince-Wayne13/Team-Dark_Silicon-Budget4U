@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.Sms" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">#1976D2</item>
+        <item name="android:navigationBarColor">#1976D2</item>
+
+        <item name="colorPrimary">#1976D2</item>
+    </style>
+</resources>

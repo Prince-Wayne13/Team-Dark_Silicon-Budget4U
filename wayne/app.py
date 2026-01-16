@@ -1,27 +1,132 @@
-from flask import Flask, render_template, jsonify, request, session
 import firebase_admin
-from firebase_admin import credentials, firestore, db # Added db for RTDB access
-import os
+from firebase_admin import credentials, auth, db, firestore
+import requests
+from flask import Flask, request, session, render_template, redirect, url_for, jsonify
 
+# --- FLASK APP SETUP ---
 app = Flask(__name__)
-app.secret_key = "YOUR_SUPER_SECRET_KEY" # REQUIRED for session to work
+app.secret_key = "YOUR_SUPER_SECRET_FLASK_KEY"
 
-# 1. Setup the specific Clean Database project
-if not firebase_admin._apps:
-    cred = credentials.Certificate(r"D:\Backup folder\Code\GitHub\trial\budget4Udb.json")
-    firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://trial-31bb9-default-rtdb.firebaseio.com/' # Required for RTDB
-    })
+# --- INITIALIZATION messy---
+cred = credentials.Certificate(r"D:\Backup folder\Code\GitHub\Team-Dark_Silicon-Budget4U\test\serviceAccountKey.json")
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://trial-31bb9-default-rtdb.firebaseio.com/'
+})
 
-# Use consistent naming for your handles
-db_fs = firestore.client()
-# rtdb = db.reference() # Uncomment if you need direct RTDB access
+# --- 2. INITIALIZE CLEAN DB (FIRESTORE) ---
+cred_clean = credentials.Certificate(r"D:\Backup folder\Code\GitHub\Team-Dark_Silicon-Budget4U\wayne\budget4Udb.json")
+clean_project_app = firebase_admin.initialize_app(cred_clean, name="clean_project")
 
-# --- PAGE ROUTES ---
+db_fs = firestore.client()  
+rtdb_root = db.reference()  
+db_fs_clean = firestore.client(app=clean_project_app)
+FIREBASE_WEB_API_KEY = "AIzaSyB0Ty2tiRNQq0hZNPnYBYhbM7VmBUouFtM" 
 
+# --- FLASK ROUTES ---  
 @app.route('/')
-def index():
-    return render_template('index.html')
+def login_page():
+    return render_template('login.html')
+
+@app.route('/signup_page')
+def signup_page():
+    return render_template('signup.html')
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    
+    try:
+        user = auth.create_user(email=email, password=password)
+        db.reference(f'users/{user.uid}').set({
+            'email': email,
+            'balance': 0,
+        })
+        
+        send_email_url = f"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={FIREBASE_WEB_API_KEY}"
+        id_token = get_user_id_token(email, password)
+        
+        email_payload = {
+            "requestType": "VERIFY_EMAIL",
+            "idToken": id_token
+        }
+        requests.post(send_email_url, json=email_payload)
+        return "Verification email sent! Please check your inbox.", 200
+
+    except Exception as e:
+        return str(e), 400
+
+def get_user_id_token(email, password):
+    login_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_WEB_API_KEY}"
+    data = {"email": email, "password": password, "returnSecureToken": True}
+    res = requests.post(login_url, json=data)
+    return res.json().get('idToken')
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    
+    auth_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={FIREBASE_WEB_API_KEY}"
+    payload = {
+        "email": email, 
+        "password": password, 
+        "returnSecureToken": True
+    }
+    
+    try:
+        response = requests.post(auth_url, json=payload)
+        data = response.json()
+
+        if response.status_code == 200:
+            user_id = data['localId']
+            user_record = auth.get_user(user_id)
+            if not user_record.email_verified:
+                return "Email not verified. Please check your inbox!", 403
+            
+            try:
+                user_ref = db_fs.collection('Transactions').document(user_id)
+                user_ref.set({
+                    'last_sync': firestore.SERVER_TIMESTAMP,
+                    'status': 'active',
+                    'email': email
+                }, merge=True)
+                session['user_id'] = user_id
+            except Exception as sync_error:
+                print(f"Firestore Sync Warning: {sync_error}")
+
+            session['user_id'] = user_id
+            return redirect(url_for('dashboard'))
+        else:
+            error_message = data.get('error', {}).get('message', 'Invalid Credentials')
+            return f"Login failed: {error_message}", 401
+
+    except Exception as e:
+        return f"An internal error occurred: {str(e)}", 500
+    
+@app.route('/dashboard')
+def dashboard():
+    if 'user_id' not in session:
+        return redirect(url_for('login_page'))
+    
+    user_id = session['user_id']
+    try:
+        user_record = auth.get_user(user_id)
+        if not user_record.email_verified:
+            session.pop('user_id', None)
+            return render_template('login.html', error="Please verify your email before accessing the dashboard.")
+
+        user_data = db.reference(f'users/{user_id}').get()
+        
+        return render_template('index.html', user=user_data)
+        
+    except Exception as e:
+        return redirect(url_for('login_page'))
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('login_page'))
 
 @app.route('/boxes')
 def boxes():
@@ -37,27 +142,22 @@ def aichatbot():
 
 @app.route('/settings')
 def settings():
-    # add
-    
     return "Settings Page Coming Soon"
 
 @app.route('/help')
 def help():
-    #add
     return "Help and FAQ Page" 
 
 # --- DATABASE API ROUTES ---
 
-# 1. GET ALL TRANSACTIONS
 @app.route('/api/transactions', methods=['GET'])
 def get_transactions():
-    # Hardcoding the UID for testing
-    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2" 
-    
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
+    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2"
     try:
-        # Fetching from your specific Firestore path
-        docs = db_fs.collection('Transactions').document(uid).collection('TransIDs').order_by('Date', direction='DESCENDING')
-        docs = docs.stream()
+        docs = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs').order_by('Date', direction='DESCENDING').stream()
+        
         history = []
         for doc in docs:
             data = doc.to_dict()
@@ -67,8 +167,8 @@ def get_transactions():
                 "id": doc.id,
                 "amount": data.get('Amount', 0),
                 "fromTo": data.get('Source', 'N/A'), # Using Source as 'fromTo'
-                "description": data.get('Reference', 'N/A'),
-                "direction": data.get('Direction', 'N/A'), # Using Reference as desc
+                "description": data.get('Reference', 'N/A'), # Using Reference as desc
+                'Direction': data.get('Direction', 'Inbound'),
                 "date": data.get('Date', 'N/A')
             }
             history.append(transaction)
@@ -77,53 +177,43 @@ def get_transactions():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# 2. CREATE NEW TRANSACTION
-
 @app.route('/api/transactions', methods=['POST'])
 def add_transaction():
-    # Hardcoded UID for testing
-    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2" 
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
+    
     data = request.json
-    
     try:
-        # 1. Reference to the user's transaction history
-        history_ref = db_fs.collection('Transactions').document(uid).collection('TransIDs')
-        
-        # 2. Add the new document
+        history_ref = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs')
         new_doc_ref = history_ref.document()
-        new_doc_ref.set({
-            'Date': data.get('Date'),
-            'Source': data.get('Source'),
-            'Reference': data.get('Reference'),
-            'Amount': float(data.get('Amount', 0)),
-            'Direction': data.get('Direction', 'Inbound'),
-            'timestamp': firestore.SERVER_TIMESTAMP # Helps with sorting by newest
-        })
         
-        return jsonify({"success": True, "id": new_doc_ref.id})
-
+        # We Map the JS keys (left) to your Firestore fields (right)
+        new_doc_ref.set({
+            'Date': data.get('date'),
+            'Source': data.get('fromTo'),
+            'Reference': data.get('description'),
+            'Amount': float(data.get('amount', 0)),
+            'Direction': data.get('direction').upper(), # Save as INBOUND/OUTBOUND
+            'timestamp': firestore.SERVER_TIMESTAMP
+        })
+        return jsonify({"success": True})
     except Exception as e:
-        print(f"Firestore Error: {e}")
-        return jsonify({"error": "Failed to connect to Firestore. Check your connection."}), 500
+        return jsonify({"error": str(e)}), 500
     
-# 3. DELETE TRANSACTION
 @app.route('/api/transactions/delete', methods=['POST'])
 def delete_transaction():
-    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2" 
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
     
     data = request.json
     trans_id = data.get('transID') 
     
     try:
-        # Path: Transactions -> {uid} -> history -> {trans_id}
-        db_fs.collection('Transactions').document(uid).collection('TransIDs').document(trans_id).delete()
+        db_fs_clean.collection('Transactions').document(uid).collection('TransIDs').document(trans_id).delete()
         return jsonify({"success": True})
     except Exception as e:
-        print(f"Delete Error: {e}")
         return jsonify({"error": str(e)}), 400
-    
 
-# 4. UPDATE TRANSACTION
 @app.route('/api/transactions/update', methods=['POST'])
 def update_transaction():
     uid = session.get('user_id')
@@ -133,7 +223,7 @@ def update_transaction():
     trans_id = data.get('id')
     
     try:
-        doc_ref = db_fs.collection('Transactions').document(uid).collection('TransIDs').document(trans_id)
+        doc_ref = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs').document(trans_id)
         doc_ref.update({
             'description': data.get('edit-description'),
             'amount': float(data.get('edit-amount', 0))
@@ -142,21 +232,18 @@ def update_transaction():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-
-
 @app.route('/api/stats', methods=['GET'])
 def get_stats():
-    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2"
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
     try:
-        docs = db_fs.collection('Transactions').document(uid).collection('TransIDs').stream()
-        
+        docs = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs').stream()
         total_income = 0
         total_expenditure = 0
         
         for doc in docs:
             data = doc.to_dict()
             amount = float(data.get('Amount', 0))
-            # Clean the string to handle any accidental spaces
             direction = str(data.get('Direction', '')).strip().upper()
             
             if direction == "INCOMING":
@@ -170,26 +257,6 @@ def get_stats():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -21,7 +21,7 @@
             </div>
 
             <nav>
-                <a href="{{ url_for('index') }}">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('dashboard') }}">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}"></a>
                 <a href="{{ url_for('transactions') }}" class="active">My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}"></a>
             <a href="{{ url_for('boxes') }}">My Boxes</a>
                 <a href="{{ url_for('settings') }}">Settings</a>
@@ -58,13 +58,18 @@
                 </div>
 
                 <div class="transaction-actions">
+                    <button class="action-btn btn">
+                        <span>Review Transactions</span>
+                        <img src="{{ url_for('static', filename='icons/review-file-svgrepo-com.svg') }}">
+                    </button>
+
                     <button class="action-btn btn" onclick="openModal()">
                         <span>Add Manual Entry</span>
                         <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}">
                     </button>
                     <button class="action-btn btn" onclick="loadTransactions()" id="refreshBtn">
-                        <span>Refresh Transactions</span>
-                        <img src="{{ url_for('static', filename='icons/refresh-cw-alt-3-svgrepo-com.svg') }}" id="refreshIcon">
+                        <span>Refresh</span>
+                        <img src="{{ url_for('static', filename='icons/refresh-svgrepo-com.svg') }}" id="refreshIcon">
                     </button>
                     <button class="action-btn btn">
                         <span>Import from SMS/PDF</span>
@@ -81,17 +86,19 @@
             </div>
 
             <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Reference</th>
-                        <th>Source</th>
-                        <th>Direction</th> <th>Amount (MK)</th>
-                    </tr>
-                </thead>
-                <tbody id="transaction-body">
-                    </tbody>
-            </table>
+                <table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Reference</th>
+            <th>Source</th>
+            <th>Direction</th> 
+            <th>Amount (MK)</th>
+            <th>Actions</th> </tr>
+    </thead>
+    <tbody id="transaction-body">
+    </tbody>
+</table>
         </main>
     </div>
 
@@ -104,82 +111,74 @@
         const descriptionInput = document.getElementById("descriptionInput");
         const amountInput = document.getElementById("amountInput");
 
-        // 1. LOAD: Calls your Flask GET route
-        async function loadTransactions() {
-            try {
-                const response = await fetch('/api/transactions');
-                const transactions = await response.json();
-                
-                // Ensure this ID matches your <tbody> ID exactly
-                const tableBody = document.getElementById("transaction-body");
-                tableBody.innerHTML = ""; 
-
-                transactions.forEach(data => {
-                    const row = document.createElement("tr");
-                    
-                    // Highlight direction color
-                    const dirColor = data.direction === 'Inbound' ? 'color: green;' : 'color: red;';
-
-                    row.innerHTML = `
-                        <td>${data.date}</td>
-                        <td>${data.fromTo}</td>
-                        <td>${data.description}</td>
-                        <td style="${dirColor} font-weight: bold;">${data.direction || 'N/A'}</td>
-                        <td>MK ${Number(data.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-                        <td>
-                            <button onclick="deleteTransaction('${data.id}')" style="border:none; background:none; cursor:pointer;">🗑️</button>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error("JS Load Error:", error);
-            }
-}
         
-      // 2. SAVE: Calls your Flask POST route
-        async function saveTransaction() {
-            const date = dateInput.value;
-            const fromToRaw = fromToInput.value.trim();
-            const description = descriptionInput.value.trim();
-            const amount = amountInput.value;
-            const direction = document.getElementById("directionInput").value; // Get direction
+        
+     async function loadTransactions() {
+            const response = await fetch('/api/transactions');
+            const data = await response.json();
+            const tableBody = document.getElementById('transaction-body');
+            
+            tableBody.innerHTML = ''; 
 
-            if (!date || !fromToRaw || !description || !amount) {
-                alert("Please fill in all fields");
-                return;
-            }
-
-            const payload = {
-                "Date": date,
-                "Source": fromToRaw,
-                "Reference": description,
-                "Amount": parseFloat(amount),
-                "Direction": direction // Send to Python
-            };
-
-    
-
-            try {
-                const response = await fetch('/api/transactions', {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    clearInputs();
-                    closeModal();
-                    loadTransactions(); // Refresh the table
-                } else {
-                    const errorData = await response.json();
-                    alert("Failed to save: " + (errorData.error || "Unknown error"));
-                }
-            } catch (error) {
-                console.error("Error saving:", error);
-            }
+            data.forEach(trans => {
+                const row = `<tr>
+                    <td>${trans.date}</td>
+                    <td>${trans.description}</td>
+                    <td>${trans.fromTo}</td>
+                    <td style="color: ${trans.Direction === 'INCOMING' ? 'green' : 'red'}; font-weight: bold;">
+                        ${trans.Direction}
+                    </td>
+                    <td>${trans.amount.toLocaleString()}</td>
+                    <td>
+                        <button onclick="deleteTransaction('${trans.id}')" style="background: #ff4d4d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
         }
 
+      
+        async function saveTransaction() {
+    const date = dateInput.value;
+    const fromToRaw = fromToInput.value.trim();
+    const description = descriptionInput.value.trim();
+    const amount = amountInput.value;
+    const direction = document.getElementById("directionInput").value; // Grab the dropdown value
+
+    if (!date || !fromToRaw || !description || !amount) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    const payload = {
+        "date": date,           // Lowercase to match standard Flask handling
+        "fromTo": fromToRaw,
+        "description": description,
+        "amount": parseFloat(amount),
+        "direction": direction  // Sending 'Inbound' or 'Outbound'
+    };
+
+    try {
+        const response = await fetch('/api/transactions', {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            clearInputs();
+            closeModal();
+            // Important: Wait a split second for Firestore to update before refreshing
+            setTimeout(loadTransactions, 500); 
+        } else {
+            alert("Save failed on server.");
+        }
+    } catch (error) {
+        console.error("Error saving:", error);
+    }
+}
         // 3. DELETE: Calls your Flask Delete route
         async function deleteTransaction(id) {
             // id here is the Firestore document ID
@@ -207,15 +206,15 @@
         function openModal() { modal.style.display = "block"; }
         function closeModal() { modal.style.display = "none"; }
         function clearInputs() {
-                dateInput.value = "";
-                fromToInput.value = "";
-                descriptionInput.value = "";
-                amountInput.value = "";
-                document.getElementById("directionInput").value = "Inbound"; // Reset dropdown
-            }
+            dateInput.value = "";
+            fromToInput.value = "";
+            descriptionInput.value = "";
+            amountInput.value = "";
+        }
 
         // Run on page load
         loadTransactions();
+
     </script>
 </body>
 </html>

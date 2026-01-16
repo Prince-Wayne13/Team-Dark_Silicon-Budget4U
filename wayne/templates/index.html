@@ -37,7 +37,7 @@
         <main class="main-content">
             <header class="header-section">
                 <div class="header-text fraunces-budget">
-                    <h1>Maswera bwanji Robert?</h1>
+                    <h1>Maswera bwanji {{ session.get('user_id') }}</h1>
                     <p>Here's a quick overview of your finances...</p>
                 </div>
                 <div class="account-icon">
@@ -84,4 +84,26 @@
         </main>
     </div>
 </body>
+<script>
+    async function updateDashboard() {
+        try {
+            const response = await fetch('/api/stats');
+            const data = await response.json();
+
+            if (data.income !== undefined) {
+                // Formatting the numbers to have commas (e.g., 67,100)
+                document.getElementById('total-income').innerText = 
+                    "MK " + data.income.toLocaleString();
+                
+                document.getElementById('total-expenditure').innerText = 
+                    "MK " + data.expenditure.toLocaleString();
+            }
+        } catch (err) {
+            console.error("Dashboard update failed:", err);
+        }
+    }
+
+    // Run when page loads
+    window.addEventListener('DOMContentLoaded', updateDashboard);
+</script>
 </html>
