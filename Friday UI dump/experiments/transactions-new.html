@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="transactions.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces&family=Inter&display=swap" rel="stylesheet">
+
+    <title>B4U | My Transactions</title>
+</head>
+
+<body class="inter-budget">
+    <div class="container">
+
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>BUDGET4U</h2>
+                <p>Your pocket accountant!</p>
+            </div>
+
+            <nav>
+                <a href="index.html">Dashboard<img src="icons/graph-up-svgrepo-com.svg"></a>
+                <a href="transactions.html" class="active">My Transactions<img src="icons/log-svgrepo-com.svg"></a>
+                <a href="#">My Boxes</a>
+                <a href="#">Settings</a>
+            </nav>
+        </aside>
+
+        <div id="addModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h2>Add Transaction</h2>
+
+                <input type="date" id="dateInput">
+                <input type="text" id="fromToInput" placeholder="From / To">
+                <input type="text" id="descriptionInput" placeholder="Description">
+                <input type="number" id="amountInput" placeholder="Amount">
+
+                <div style="margin-top:10px;">
+                    <button onclick="saveTransaction()">Save</button>
+                    <button onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <header class="header-section">
+                <div class="header-text fraunces-budget">
+                    <h1>My Transactions</h1>
+                    <p>Here's a list of your last transaction history...</p>
+                </div>
+
+                <div class="transaction-actions">
+                    <button class="action-btn btn">
+                        <span>Review Transactions</span>
+                        <img src="icons/review-file-svgrepo-com.svg">
+                    </button>
+
+                    <button class="action-btn btn" onclick="openModal()">
+                        <span>Add Manual Entry</span>
+                        <img src="icons/add-square-svgrepo-com.svg">
+                    </button>
+
+                    <button class="action-btn btn">
+                        <span>Import from SMS/PDF</span>
+                        <img src="icons/import-svgrepo-com.svg">
+                    </button>
+                </div>
+            </header>
+
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search transactions...">
+                <button class="btn">
+                    <img src="icons/search-svgrepo-com.svg">
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>From/To</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </main>
+    </div>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-pbJ2QglNhDJyLROR9ph-I8J9xbMaNR8",
+            authDomain: "budget4u-c1a90.firebaseapp.com",
+            projectId: "budget4u-c1a90",
+            storageBucket: "budget4u-c1a90.appspot.com",
+            messagingSenderId: "849502953182",
+            appId: "1:849502953182:web:9854dbcfb4f17280fe2c4f"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const tableBody = document.querySelector("tbody");
+
+        const dateInput = document.getElementById("dateInput");
+        const fromToInput = document.getElementById("fromToInput");
+        const descriptionInput = document.getElementById("descriptionInput");
+        const amountInput = document.getElementById("amountInput");
+
+        const modal = document.getElementById("addModal");
+
+        function loadTransactions() {
+            db.collection("Transactions")
+                .orderBy("date", "desc")
+                .onSnapshot(snapshot => {
+                    tableBody.innerHTML = "";
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                  <td>${data.date.toDate().toLocaleDateString()}</td>
+                  <td>${data.fromTo}</td>
+                  <td>${data.description}</td>
+                  <td>${data.amount}</td>
+                  <td>
+                      <button onclick="deleteTransaction('${doc.id}')">🗑️</button>
+                  </td>
+              `;
+                        tableBody.appendChild(row);
+                    });
+                });
+        }
+
+        function saveTransaction() {
+            const date = dateInput.value;
+            const fromTo = fromToInput.value.trim();
+            const description = descriptionInput.value.trim();
+            const amount = Number(amountInput.value);
+
+            if (!date || !fromTo || !description || !amount) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            db.collection("Transactions").add({
+                date: firebase.firestore.Timestamp.fromDate(new Date(date)),
+                fromTo,
+                description,
+                amount
+            }).then(() => {
+                clearInputs();
+                closeModal();
+            });
+        }
+
+        function deleteTransaction(id) {
+            db.collection("Transactions").doc(id).delete();
+        }
+
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        function clearInputs() {
+            dateInput.value = "";
+            fromToInput.value = "";
+            descriptionInput.value = "";
+            amountInput.value = "";
+        }
+
+        loadTransactions();
+    </script>
+
+
+</body>
+
+</html>

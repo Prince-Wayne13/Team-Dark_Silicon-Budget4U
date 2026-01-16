@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>B4U | SMS Sync Sandbox FIXED</title>
+    <style>
+        /* 1. BASE LAYOUT & BLUR */
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; padding: 50px; margin: 0; }
+        .container { transition: filter 0.3s ease; text-align: center; }
+        .blurred { filter: blur(8px); pointer-events: none; }
+        .hidden { display: none !important; }
+
+        /* 2. MODAL WRAPPER (Centering) */
+        .modal-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+
+        .modal-content {
+            background: white; padding: 40px 30px; border-radius: 16px;
+            width: 90%; max-width: 400px; position: relative; text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 3. YOUR SPECIFIC ICON & BUTTON SCALING (FIXED) */
+        #app-sync-image { 
+            width: 90%; /* Keeping it exactly as your CSS requested */
+            height: auto; 
+            margin: 0 auto 1rem auto;
+            display: block;
+        }
+
+        #play-store-icon { 
+            width: 2rem; /* Fixed the "huge icon" bug */
+            height: 2rem; 
+        }
+
+        .btn-store {
+            display: flex; flex-direction: row; background-color: #e5e7eb;
+            border: 1px solid black; width: fit-content; align-items: center;
+            justify-content: center; gap: 1rem; padding: 1rem; border-radius: 6px;
+            text-decoration: none; color: black; font-size: 1rem;
+            margin: 0 auto;
+        }
+
+        #closeRedirect {
+            position: absolute; top: 10px; right: 10px;
+            background: none; border: none; cursor: pointer;
+            font-size: 20px; font-weight: bold;
+        }
+
+        /* 4. SYNC SECTION & DIVIDER */
+        .modal-divider { margin: 20px 0; border: 0; border-top: 1px solid #eee; }
+        
+        .sync-section { 
+            display: flex; flex-direction: column; gap: 0.5rem; 
+            background: #fdfaff; padding: 15px; border-radius: 12px; 
+            border: 1px dashed black; 
+        }
+
+        .btn-sync { 
+            background-color: #e5e7eb; color: black; border: none; 
+            width: 100%; padding: 12px; border-radius: 8px; 
+            cursor: pointer; font-weight: 600; 
+        }
+
+        /* 5. LOADING VIEW & SPINNER */
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #A7C1A8; /* Using your branding green */
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .notice-box {
+            background: #fff9eb; border-left: 4px solid #f59e0b;
+            padding: 12px; margin-top: 20px; text-align: left; border-radius: 4px;
+        }
+        .notice-box p { margin: 0; font-size: 0.85rem; color: #92400e; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="container">
+        <h1>B4U Dashboard</h1>
+        <button id="openImport" style="padding: 1rem; cursor: pointer;">Import from SMS</button>
+    </div>
+
+    <div class="hidden" id="sms-redirect-modal">
+        <div class="modal-content">
+            <button id="closeRedirect">×</button>
+
+            <div id="initial-view">
+                <h2>Import from SMS</h2>
+                <img src="../icons/undraw_sync_pe2t.svg" id="app-sync-image">
+                <p>To import SMS transactions, please use our Companion App on your mobile device.</p>
+
+                <div class="promo-links" style="display: flex; flex-direction: column; align-items: center; gap: 0.8rem; margin-top: 20px;">
+                    <a href="#" class="btn-store">
+                        <img src="../icons/google-play-style-svgrepo-com.svg" id="play-store-icon">
+                        Get it on the PlayStore
+                    </a>
+                    <a href="help.html" style="color: gray; font-weight: 600; text-decoration: none;">Learn more about the app →</a>
+                </div>
+
+                <hr class="modal-divider">
+
+                <div class="sync-section">
+                    <p style="margin:0;">Already imported using the app?</p>
+                    <button id="runSyncBtn" class="btn-sync">Sync & Parse SMS</button>
+                </div>
+            </div>
+
+            <div id="loading-view" class="hidden">
+                <h2>Syncing Data...</h2>
+                <div class="spinner"></div>
+                <p id="statusTxt" style="font-weight: bold; color: #7c3aed;">Connecting to AI model...</p>
+                
+                <div class="notice-box">
+                    <p><strong>Heads up:</strong> This takes about 15 min. Feel free to close this; we'll update everything in the background!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const openBtn = document.getElementById('openImport');
+        const closeBtn = document.getElementById('closeRedirect');
+        const modal = document.getElementById('sms-redirect-modal');
+        const container = document.getElementById('container');
+        
+        const syncBtn = document.getElementById('runSyncBtn');
+        const initialView = document.getElementById('initial-view');
+        const loadingView = document.getElementById('loading-view');
+
+        openBtn.onclick = () => {
+            modal.classList.remove('hidden');
+            modal.classList.add('modal-container');
+            container.classList.add('blurred');
+            initialView.classList.remove('hidden');
+            loadingView.classList.add('hidden');
+        };
+
+        closeBtn.onclick = () => {
+            modal.classList.remove('modal-container');
+            modal.classList.add('hidden');
+            container.classList.remove('blurred');
+        };
+
+        syncBtn.onclick = () => {
+            initialView.classList.add('hidden');
+            loadingView.classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+.transaction-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 350px;
+}
+
+.modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid black;
+    padding: 2rem;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    z-index: 999;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.blurred {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+button img {
+    width: 2rem;
+    height: 2rem;
+}
+
+.transaction-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 4px;
+  margin-top: 12px;
+}
+
+.transaction-form input, 
+.transaction-form select {
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #999;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.transaction-form input:focus, 
+.transaction-form select:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+.transaction-form button[type="submit"] {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #222;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.transaction-form button[type="submit"]:hover {
+    background-color: #000;
+}
