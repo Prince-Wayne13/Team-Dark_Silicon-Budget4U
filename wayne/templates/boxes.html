@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='boxes.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='modal.css') }}">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
     <title>B4U | My Boxes</title>
 </head>
 <body class="inter-budget">
@@ -23,17 +22,10 @@
                 <p>Your pocket accountant!</p>
             </div>
             <nav>
-                <a href="{{ url_for('dashboard') }}">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}" alt="Dashboard icon"></a>
-                <a href="{{ url_for('transactions') }}">My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}" alt="Transactions icon"></a>
-                <a href="{{ url_for('boxes') }}" class="active">My Boxes
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 0 0 0-.16.832V12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 12V9.832c0-.287-.055-.57-.16-.832M2.41 9a2.25 2.25 0 0 1 .382-.632l3.285-3.832a2.25 2.25 0 0 1 1.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5 20.25h15A2.25 2.25 0 0 0 21.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
-                </a>
-                <a href="#">Settings 
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
-                </a>
+                <a href="{{ url_for('dashboard') }}">Dashboard <img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('transactions') }}">My Transactions <img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('boxes') }}" class="active">My Boxes</a>
+                <a href="#">Settings</a>
             </nav>
         </aside>
         
@@ -42,233 +34,192 @@
                 <div class="header-text fraunces-budget">
                     <h1>My Boxes</h1>
                 </div>
-                <button class="action-btn btn" id="openCreateBox">
-                        <span>Create a Box </span>
-                        <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}" alt="Add icon">
-                    </button>
+                <button class="action-btn" id="openCreateBox">
+                    <span>Create a Box</span>
+                    <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}">
+                </button>
             </header>
+
             <div class="info-box">
-                <img src="{{ url_for('static', filename='icons/lightbulb-minimalistic-svgrepo-com.svg') }}" alt="Info" class="info-icon-compact">
+                <img src="{{ url_for('static', filename='icons/lightbulb-minimalistic-svgrepo-com.svg') }}">
                 <div class="info-text">
-                    <strong>What are Boxes?</strong> Separate "money pots" for different business expenses. 
-                    Track Marketing, Supplies, Utilities, and more in their own Boxes to see exactly where your money goes.
-                    <a href="{{ url_for('help') }}" class="learn-more-inline">Learn more →</a>
+                    <strong>Smart Pots:</strong> These boxes automatically track transactions where the <b>Source</b> matches the <b>Box Name</b>.
+                    <a href="#" class="learn-more-inline">Learn more →</a>
                 </div>
             </div>
-            <div class="box-container">
-                <div class="the-box">
-                    <div class="box-header">
-                        <span class="box-type-label">REVENUE</span>
-                        <button class="box-settings" id="openEditBox">
-                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="History">
-                        </button>
-                    </div>
-                    <h2 class="box-name">Airtel Money</h2>
-                    <div class="box-total">
-                        <span class="total-label">TOTAL VALUE</span>
-                        <div class="total-amount-row">
-                            <span class="total-amount">MK 30,000</span>
-                            <div class="progress-circle">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-flow">
-                        <div class="flow-item">
-                            <span class="flow-label">IN / MO</span>
-                            <span class="flow-amount positive">+MK2100</span>
-                        </div>
-                        <div class="flow-item">
-                            <span class="flow-label">OUT / MO</span>
-                            <span class="flow-amount negative">-MK0</span>
-                        </div>
-                    </div>
-                    <div class="box-footer">
-                        <a href="#" class="view-history">
-                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
-                            VIEW HISTORY
-                        </a>
-                    </div>
+
+            <div class="box-container" id="box-wrapper">
                 </div>
-                <div class="the-box">
-                    <div class="box-header">
-                        <span class="box-type-label">REVENUE</span>
-                        <button class="box-settings" id="openEditBox">
-                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="History">
-                        </button>
-                    </div>
-                    <h2 class="box-name">Mpamba</h2>
-                    <div class="box-total">
-                        <span class="total-label">TOTAL VALUE</span>
-                        <div class="total-amount-row">
-                            <span class="total-amount">MK 40,000</span>
-                            <div class="progress-circle">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-flow">
-                        <div class="flow-item">
-                            <span class="flow-label">IN / MO</span>
-                            <span class="flow-amount positive">+MK5100</span>
-                        </div>
-                        <div class="flow-item">
-                            <span class="flow-label">OUT / MO</span>
-                            <span class="flow-amount negative">-MK2400</span>
-                        </div>
-                    </div>
-                    <div class="box-footer">
-                        <a href="#" class="view-history">
-                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
-                            VIEW HISTORY
-                        </a>
-                    </div>
-                </div>
-                <div class="the-box">
-                    <div class="box-header">
-                        <span class="box-type-label">ASSET</span>
-                        <button class="box-settings" id="openEditBox">
-                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="Settings">
-                        </button>
-                    </div>
-                    <h2 class="box-name">Stock Inventory</h2>
-                    <div class="box-total">
-                        <span class="total-label">TOTAL VALUE</span>
-                        <div class="total-amount-row">
-                            <span class="total-amount">MK 850,000</span>
-                            <div class="progress-circle"></div>
-                        </div>
-                    </div>
-                    <div class="box-flow">
-                        <div class="flow-item">
-                            <span class="flow-label">IN / MO</span>
-                            <span class="flow-amount positive">+MK120,000</span>
-                        </div>
-                        <div class="flow-item">
-                            <span class="flow-label">OUT / MO</span>
-                            <span class="flow-amount negative">-MK45,000</span>
-                        </div>
-                    </div>
-                    <div class="box-footer">
-                        <a href="#" class="view-history">
-                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
-                            VIEW HISTORY
-                        </a>
-                    </div>
-                </div>
-                <div class="the-box">
-                    <div class="box-header">
-                        <span class="box-type-label">EXPENSE</span>
-                        <button class="box-settings" id="openEditBox">
-                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="Settings">
-                        </button>
-                    </div>
-                    <h2 class="box-name">Shop Rent</h2>
-                    <div class="box-total">
-                        <span class="total-label">TOTAL VALUE</span>
-                        <div class="total-amount-row">
-                            <span class="total-amount">MK 150,000</span>
-                            <div class="progress-circle"></div>
-                        </div>
-                    </div>
-                    <div class="box-flow">
-                        <div class="flow-item">
-                            <span class="flow-label">IN / MO</span>
-                            <span class="flow-amount positive">+MK0</span>
-                        </div>
-                        <div class="flow-item">
-                            <span class="flow-label">OUT / MO</span>
-                            <span class="flow-amount negative">-MK150,000</span>
-                        </div>
-                    </div>
-                    <div class="box-footer">
-                        <a href="#" class="view-history">
-                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
-                            VIEW HISTORY
-                        </a>
-                    </div>
-                </div>
-                <div class="the-box">
-                    <div class="box-header">
-                        <span class="box-type-label">SAVINGS</span>
-                        <button class="box-settings" id="openEditBox">
-                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="Settings">
-                        </button>
-                    </div>
-                    <h2 class="box-name">Emergency Fund</h2>
-                    <div class="box-total">
-                        <span class="total-label">TOTAL VALUE</span>
-                        <div class="total-amount-row">
-                            <span class="total-amount">MK 320,000</span>
-                            <div class="progress-circle"></div>
-                        </div>
-                    </div>
-                    <div class="box-flow">
-                        <div class="flow-item">
-                            <span class="flow-label">IN / MO</span>
-                            <span class="flow-amount positive">+MK25,000</span>
-                        </div>
-                        <div class="flow-item">
-                            <span class="flow-label">OUT / MO</span>
-                            <span class="flow-amount negative">-MK0</span>
-                        </div>
-                    </div>
-                    <div class="box-footer">
-                        <a href="#" class="view-history">
-                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
-                            VIEW HISTORY
-                        </a>
-                    </div>
-                </div>
-            </div>
         </main>
     </div>
-    <div class="hidden" id="edit-box-modal">
-    <button id="closeEditBox"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
-    <h2>Edit Box</h2>
-    <form action="#" class="transaction-form">
-        <label for="edit-box-name">Box Name</label>
-        <input type="text" id="edit-box-name" value="Airtel Money">
 
-        <label for="edit-box-category">Category</label>
-        <select id="edit-box-category">
-            <option selected>Asset</option>
-            <option>Liability</option>
-            <option>Revenue</option>
-            <option>Expense</option>
-        </select>
+    <div id="create-box-modal" class="hidden">
+        <button id="closeCreateBox" type="button"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
+        <h2>Create a New Box</h2>
+        <form class="transaction-form" id="create-box-form">
+            <label>Box Name</label>
+            <input type="text" id="box-name" placeholder="e.g. Shop Rent" required>
 
-        <label for="edit-box-budget">Monthly Budget</label>
-        <input type="text" id="edit-box-budget" value="MK 50,000">
+            <label>Category</label>
+            <select id="box-category">
+                <option value="Asset">Asset</option>
+                <option value="Liability">Liability</option>
+                <option value="Revenue">Revenue</option>
+                <option value="Expense">Expense</option>
+            </select>
 
-        <label for="edit-box-description">Description</label>
-        <input type="text" id="edit-box-description" value="Mobile money wallet">
+            <label>Monthly Budget Goal</label>
+            <input type="number" id="box-budget" placeholder="MK 50,000">
 
-        <button type="submit">Save Changes</button>
-    </form>
-</div>
-<div class="hidden" id="create-box-modal">
-    <button id="closeCreateBox"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
-    <h2>Create a New Box</h2>
-    <form action="#" class="transaction-form">
-        <label for="box-name">Box Name</label>
-        <input type="text" id="box-name" placeholder="e.g. Shop Rent" autofocus>
+            <button type="submit">Create Box</button>
+        </form>
+    </div>
 
-        <label for="box-category">Category</label>
-        <select id="box-category">
-            <option>Asset</option>
-            <option>Liability</option>
-            <option>Revenue</option>
-            <option>Expense</option>
-        </select>
+    <div id="edit-box-modal" class="hidden">
+        <button id="closeEditBox" type="button"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
+        <h2>Edit Box</h2>
+        <form class="transaction-form" id="edit-box-form">
+            <label>Box Name</label>
+            <input type="text" id="edit-box-name">
 
-        <label for="box-budget">Monthly Budget (Optional)</label>
-        <input type="text" id="box-budget" placeholder="MK 0.00">
+            <label>Monthly Budget Goal</label>
+            <input type="number" id="edit-box-budget">
 
-        <label for="box-description">Description (Optional)</label>
-        <input type="text" id="box-description" placeholder="e.g. Monthly rent payments">
+            <label>Manual Balance Adjustment</label>
+            <input type="number" id="edit-manual-balance">
+            <p>Use this to fix the starting balance without adding a transaction.</p>
 
-        <button type="submit">Create Box</button>
-    </form>
-</div>
-<script src="{{ url_for('static', filename='scripts/modalmagicboxes.js') }}"></script>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('container');
+            const boxWrapper = document.getElementById('box-wrapper');
+            const createModal = document.getElementById('create-box-modal');
+            const editModal = document.getElementById('edit-box-modal');
+
+            // --- 1. MODAL CONTROLS ---
+            window.toggleModal = (modal, show = true) => {
+                if (show) {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('modal-container');
+                    container.classList.add('blurred');
+                } else {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('modal-container');
+                    container.classList.remove('blurred');
+                }
+            };
+
+            document.getElementById('openCreateBox').onclick = () => toggleModal(createModal, true);
+            document.getElementById('closeCreateBox').onclick = () => toggleModal(createModal, false);
+            document.getElementById('closeEditBox').onclick = () => toggleModal(editModal, false);
+
+            // --- 2. LOAD & RENDER BOXES ---
+            async function loadBoxes() {
+                try {
+                    const res = await fetch('/api/boxes');
+                    const boxes = await res.json();
+                    boxWrapper.innerHTML = '';
+
+                    boxes.forEach(box => {
+                        const goal = box.budget_goal || 1;
+                        const current = box.total_value || 0;
+                        const incomeIn = box.income_in || 0;
+                        const incomeOut = box.income_out || 0;
+                        const percent = Math.min((current / goal) * 100, 100).toFixed(0);
+
+                        boxWrapper.innerHTML += `
+                            <div class="the-box">
+                                <div class="box-header">
+                                    <span class="box-type-label">${box.category}</span>
+                                    <button class="box-settings" onclick="prepareEditModal('${box.id}', '${box.name}', ${box.budget_goal}, ${box.manual_balance || 0})">
+                                        <img src="/static/icons/settings-svgrepo-com.svg">
+                                    </button>
+                                </div>
+                                <h2 class="box-name">${box.name}</h2>
+                                <div class="box-total">
+                                    <span class="total-label">Current Balance</span>
+                                    <div class="total-amount">MK ${current.toLocaleString()}</div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                                    </div>
+                                    <p style="font-size:11px; color:#64748b;">${percent}% of MK ${goal.toLocaleString()} goal</p>
+                                </div>
+                                <div class="box-flow">
+                                    <div class="flow-item">
+                                        <span class="flow-label">IN / MO</span>
+                                        <span class="flow-amount positive">+MK ${incomeIn.toLocaleString()}</span>
+                                    </div>
+                                    <div class="flow-item">
+                                        <span class="flow-label">OUT / MO</span>
+                                        <span class="flow-amount negative">-MK ${incomeOut.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                                <div class="box-footer">
+                                    <button onclick="deleteBox('${box.id}')" class="delete-btn">Delete</button>
+                                    <a href="/transactions?filter=${encodeURIComponent(box.name)}" class="view-history">
+                                        <img src="/static/icons/history-3-svgrepo-com.svg"> HISTORY
+                                    </a>
+                                </div>
+                            </div>`;
+                    });
+                } catch (e) { console.error("Load error", e); }
+            }
+
+            // --- 3. CREATE BOX ---
+            document.getElementById('create-box-form').onsubmit = async (e) => {
+                e.preventDefault();
+                const payload = {
+                    name: document.getElementById('box-name').value,
+                    category: document.getElementById('box-category').value,
+                    budget_goal: parseFloat(document.getElementById('box-budget').value) || 0
+                };
+                const res = await fetch('/api/boxes', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) location.reload();
+            };
+
+            // --- 4. EDIT BOX ---
+            window.prepareEditModal = (id, name, goal, manualBal) => {
+                document.getElementById('edit-box-name').value = name;
+                document.getElementById('edit-box-budget').value = goal;
+                document.getElementById('edit-manual-balance').value = manualBal;
+                document.getElementById('edit-box-form').setAttribute('data-id', id);
+                toggleModal(editModal, true);
+            };
+
+            document.getElementById('edit-box-form').onsubmit = async (e) => {
+                e.preventDefault();
+                const boxId = e.target.getAttribute('data-id');
+                const payload = {
+                    name: document.getElementById('edit-box-name').value,
+                    budget_goal: parseFloat(document.getElementById('edit-box-budget').value) || 0,
+                    manual_balance: parseFloat(document.getElementById('edit-manual-balance').value) || 0
+                };
+                const res = await fetch(`/api/boxes/${boxId}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) location.reload();
+            };
+
+            // --- 5. DELETE BOX ---
+            window.deleteBox = async (id) => {
+                if (confirm("Delete this box?")) {
+                    await fetch(`/api/boxes/${id}`, { method: 'DELETE' });
+                    loadBoxes();
+                }
+            };
+
+            loadBoxes();
+        });
+    </script>
 </body>
 </html>

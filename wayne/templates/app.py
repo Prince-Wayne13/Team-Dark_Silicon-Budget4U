@@ -173,7 +173,28 @@ def get_stats():
 
 
 
+@app.route('/api/boxes', methods=['GET'])
+def get_boxes():
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
 
+    try:
+        # Path: Boxes > [UID] > UserBoxes
+        boxes_ref = db_fs.collection('Boxes').document(uid).collection('UserBoxes')
+        docs = boxes_ref.stream()
+        
+        box_list = []
+        for doc in docs:
+            box_data = doc.to_dict()
+            box_data['id'] = doc.id
+            # Ensure numbers are floats for JS math
+            box_data['total_value'] = float(box_data.get('total_value', 0))
+            box_data['budget_goal'] = float(box_data.get('budget_goal', 0))
+            box_list.append(box_data)
+            
+        return jsonify(box_list)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 

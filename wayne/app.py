@@ -2,6 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, auth, db, firestore
 import requests
 from flask import Flask, request, session, render_template, redirect, url_for, jsonify
+from datetime import datetime
 
 # --- FLASK APP SETUP ---
 app = Flask(__name__)
@@ -154,7 +155,7 @@ def help():
 def get_transactions():
     uid = session.get('user_id')
     if not uid: return jsonify({"error": "Unauthorized"}), 401
-    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2"
+    
     try:
         docs = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs').order_by('Date', direction='DESCENDING').stream()
         
@@ -196,9 +197,30 @@ def add_transaction():
             'Direction': data.get('direction').upper(), # Save as INBOUND/OUTBOUND
             'timestamp': firestore.SERVER_TIMESTAMP
         })
+        source_name = data.get('fromTo') # This MUST match the Box Name
+        amount = float(data.get('amount'))
+        direction = data.get('direction') # 'INCOMING' or 'OUTGOING'
+
+        # 1. Save the transaction (existing code...)
+        
+        # 2. Update the Box Balance
+        # Find the box where the name matches the transaction source
+        boxes_ref = db_fs.collection('Boxes').document(uid).collection('UserBoxes')
+        query = boxes_ref.where('name', '==', source_name).limit(1).get()
+
+        if query:
+            box_doc = query[0]
+            current_val = float(box_doc.to_dict().get('total_value', 0))
+            
+            # Calculate new balance
+            new_val = current_val + amount if direction == 'INCOMING' else current_val - amount
+            
+            # Update the box in Firestore
+            boxes_ref.document(box_doc.id).update({'total_value': new_val})
         return jsonify({"success": True})
+    
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+             return jsonify({"error": str(e)}), 500
     
 @app.route('/api/transactions/delete', methods=['POST'])
 def delete_transaction():
@@ -257,6 +279,125 @@ def get_stats():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/api/boxes', methods=['GET'])
+def get_boxes():
+    uid = session.get('user_id')
+    if not uid: return jsonify([]), 401
+
+    # Exact paths from your database
+    boxes_ref = db_fs_clean.collection('Boxes').document(uid).collection('UserBoxes')
+    trans_ref = db_fs_clean.collection('Transactions').document(uid).collection('TransIDs')
+    
+    boxes = []
+    try:
+        # Load all transactions into memory once
+        all_transactions = [t.to_dict() for t in trans_ref.stream()]
+
+        for doc in boxes_ref.stream():
+            box = doc.to_dict()
+            box['id'] = doc.id
+            
+            # Normalize box name for matching: "Shop Rent" -> "shop rent"
+            box_name_clean = box.get('name', '').lower().strip()
+            manual_bal = float(box.get('manual_balance', 0))
+
+            income_in = 0
+            income_out = 0
+            
+            for t_data in all_transactions:
+                # Using Title Case 'Source' as per your snippet
+                t_source = str(t_data.get('Source', '')).lower().strip()
+                
+                if t_source == box_name_clean:
+                    # Using Title Case 'Amount'
+                    amt = float(t_data.get('Amount', 0))
+                    
+                    # Using Title Case 'Direction'
+                    # We compare lowercase 'incoming' to the lowercase version of the data
+                    t_dir = str(t_data.get('Direction', '')).lower().strip()
+                    
+                    if t_dir == "incoming":
+                        income_in += amt
+                    elif t_dir == "outgoing":
+                        income_out += amt
+
+            # The Net Balance Calculation
+            current_balance = (manual_bal + income_in) - income_out
+            
+            box['income_in'] = income_in
+            box['income_out'] = income_out
+            box['total_value'] = current_balance
+            boxes.append(box)
+
+        return jsonify(boxes)
+    except Exception as e:
+        print(f"Logic Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
+        print(f"Error in get_boxes: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/boxes', methods=['POST'])
+def create_box():
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
+    
+    data = request.json
+    try:
+        box_ref = db_fs_clean.collection('Boxes').document(uid).collection('UserBoxes').document()
+        
+        box_ref.set({
+            'name': data.get('name'),
+            'category': data.get('category'), # e.g., Revenue, Expense
+            'description': data.get('description', ''),
+            'total_value': float(data.get('initial_balance', 0)),
+            'budget_goal': float(data.get('budget_goal', 0)),
+            'created_at': firestore.SERVER_TIMESTAMP
+        })
+        return jsonify({"success": True, "id": box_ref.id})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/boxes/<box_id>', methods=['PUT'])
+def update_box(box_id):
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
+    
+    data = request.json
+    try:
+        # Update Firestore
+        box_ref = db_fs.collection('Boxes').document(uid).collection('UserBoxes').document(box_id)
+        box_ref.update({
+            'name': data.get('name'),
+            'budget_goal': float(data.get('budget_goal', 0)),
+            'manual_balance': float(data.get('manual_balance', 0))
+        })
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+@app.route('/api/boxes/<box_id>', methods=['DELETE'])
+def delete_box(box_id):
+    uid = session.get('user_id')
+    if not uid: return jsonify({"error": "Unauthorized"}), 401
+    
+    try:
+        db_fs_clean.collection('Boxes').document(uid).collection('UserBoxes').document(box_id).delete()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
