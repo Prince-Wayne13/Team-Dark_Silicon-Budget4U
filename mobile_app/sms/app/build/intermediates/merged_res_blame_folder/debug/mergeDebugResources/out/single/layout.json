@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.example.sms.app-mergeDebugResources-64:/layout/activity_main.xml",
+        "source": "com.example.sms.app-main-67:/layout/activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\USER\\.gradle\\daemon\\8.13\\com.example.sms.app-mergeDebugResources-64:\\layout\\activity_main.xml",
+        "source": "C:\\Users\\USER\\.gradle\\daemon\\8.13\\com.example.sms.app-main-67:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\USER\\.gradle\\daemon\\8.13\\com.example.sms.app-mergeDebugResources-64:\\layout\\activity_maps.xml",
+        "source": "C:\\Users\\USER\\.gradle\\daemon\\8.13\\com.example.sms.app-main-67:\\layout\\activity_maps.xml"
+    }
+]

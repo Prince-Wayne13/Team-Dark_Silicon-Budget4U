@@ -1,0 +1,77 @@
+/* ===================
+   DASHBOARD OVERVIEW GRID
+   =================== */
+.overview-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: auto auto auto;
+    gap: 2rem;
+    grid-template-areas: 
+        "income expenditure daily daily"
+        "category category daily daily"
+        "reports transaction . . "
+        ".  ai ai .";
+}
+
+/* ===================
+   DASHBOARD CARDS
+   =================== */
+.income-card {
+    grid-area: income;
+    background-color: #c8e6c9;
+}
+
+.expenditure-card {
+    grid-area: expenditure;
+    background-color: #ffccbc;
+}
+
+.daily-expenditure-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-area: daily;
+    max-height: 30rem;
+    background-color: #f5f5f5;
+}
+
+.category-breakdown-card {
+    grid-area: category;
+    background-color: #f5f5f5;
+}
+
+/* ===================
+   DASHBOARD BUTTONS
+   =================== */
+.reports-btn {
+    grid-area: reports;
+    background-color: #BBDCE5;
+}
+
+.add-transaction-btn {
+    grid-area: transaction;
+    background-color: #BBDCE5;
+}
+
+.ai-advisor-btn {
+    text-decoration: none;
+    display:flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background-color: palevioletred;
+    margin: 0rem 15rem;
+    grid-area: ai;
+    color: black;
+    border: 1px solid black;
+}
+.sponsored{
+    display: flex;
+    gap: 0.2rem;
+    flex-direction: row;
+}

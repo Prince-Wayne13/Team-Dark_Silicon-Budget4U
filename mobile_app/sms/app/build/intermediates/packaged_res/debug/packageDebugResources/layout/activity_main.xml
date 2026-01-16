@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/statusBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/status_bg"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="Checking..."
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/logoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Budget4U"
+        android:textColor="#1E293B"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="@id/statusBadge"
+        app:layout_constraintTop_toBottomOf="@id/statusBadge" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoText">
+
+        <LinearLayout
+            android:id="@+id/authSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/emailInput"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/modern_input_bg"
+                android:hint="Email Address"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="20dp" />
+
+            <EditText
+                android:id="@+id/passwordInput"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/modern_input_bg"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingHorizontal="20dp" />
+
+            <CheckBox
+                android:id="@+id/showPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="See Password"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:backgroundTint="#2563EB"
+                android:text="Sign In"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="16dp" />
+
+            <TextView
+                android:id="@+id/btnSignup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:text="New user? Create Account"
+                android:textColor="#64748B" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/exportSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnExport"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:backgroundTint="#2563EB"
+                android:text="EXPORT DATA"
+                android:textStyle="bold"
+                app:cornerRadius="18dp" />
+
+            <TextView
+                android:id="@+id/btnSignout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:padding="10dp"
+                android:text="Logout"
+                android:textColor="#94A3B8" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/loadingBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:indeterminateTint="#2563EB"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

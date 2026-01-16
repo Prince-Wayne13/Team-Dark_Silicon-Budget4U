@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icons/budget-svgrepo-com.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Dashboard</title>
+</head>
+<body class="inter-budget">
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>BUDGET4U</h2>
+                <p>Your pocket accountant!</p>
+            </div>
+            <nav>
+                <a href="{{ url_for('dashboard') }}" class="active">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}" alt="Dashboard icon"></a>
+                <a href="{{ url_for('transactions') }}">My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}" alt="Transactions icon"></a>
+                <a href="{{ url_for('boxes') }} ">My Boxes
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 
+                <a href="#">Settings 
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>
+                </a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header-section">
+                <div class="header-text fraunces-budget">
+                    <h1>Maswera bwanji {{ session.get('user_id') }}</h1>
+                    <p>Here's a quick overview of your finances...</p>
+                </div>
+                <div class="account-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+</svg>
+                </div>
+            </header>
+            
+            <section class="overview-section">
+                <div class="card income-card">
+                    <span class="icon">↑</span>
+                    <h3 id="total-income">MK 0</h3>
+                    <p>Total Income</p>
+                </div>
+                                
+                <div class="card expenditure-card">
+                    <span class="icon">↓</span>
+                    <h3 id="total-expenditure">MK 0</h3>
+                    <p>Total Expenditure</p>
+                </div>
+                
+                <div class="card daily-expenditure-card">
+                    <canvas id="categoriesPolarChart"></canvas>
+                </div>
+                
+                <div class="card category-breakdown-card">
+                    <canvas id="weeklyExpenseBarChart"></canvas>
+                </div>
+                <a href="#"  class="ai-advisor-btn">AI Advisor<img src="{{ url_for('static', filename='icons/icons8-ai.svg') }}" alt="AI symbol"></a>
+            </section>
+            <div class="sponsored">
+             <a  target="_blank" href="https://icons8.com/icon/rYb1JFR9WLSh/ai">AI</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+            </div>       
+        </main>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+<script>
+  const ctxa = document.getElementById('weeklyExpenseBarChart');
+  const ctxb = document.getElementById('categoriesPolarChart');
+
+  new Chart(ctxa, {
+    type: 'bar',
+    data: {
+      labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sartuday', 'Sunday'],
+      datasets: [
+        {label: 'Income',
+        data: [12000, 19000, 3000, 15000, 12500, 300, 25000],
+        borderWidth: 1
+        },
+        {label: 'Expenses',
+        data: [1200, 12000, 8000, 18000, 2500, 100, 45000],
+        borderWidth: 1
+        },
+       
+       ] 
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  new Chart (ctxb,{
+    type: 'polarArea',
+    data: {
+      labels: ['Transport', 'Rent', 'Inventory', 'Utilities', 'Tax', 'Marketing'],
+      datasets: [
+        {label: 'Amount',
+        data: [130000, 25000, 3000, 15000, 125000, 100000, 55000],
+        borderWidth: 1,
+        }]
+    },
+    options: {
+        scales: {
+            r: {
+                suggestedMin: 0,
+                suggestedMax: 10
+            }
+        }
+    }
+    }
+  );
+  async function updateDashboard() {
+        try {
+            const response = await fetch('/api/stats');
+            const data = await response.json();
+
+            if (data.income !== undefined) {
+                // Formatting the numbers to have commas (e.g., 67,100)
+                document.getElementById('total-income').innerText = 
+                    "MK " + data.income.toLocaleString();
+                
+                document.getElementById('total-expenditure').innerText = 
+                    "MK " + data.expenditure.toLocaleString();
+            }
+        } catch (err) {
+            console.error("Dashboard update failed:", err);
+        }
+    }
+
+    // Run when page loads
+    window.addEventListener('DOMContentLoaded', updateDashboard);
+</script>
+
+</html>

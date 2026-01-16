@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icons/budget-svgrepo-com.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='boxes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='modal.css') }}">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <title>B4U | My Boxes</title>
+</head>
+<body class="inter-budget">
+    <div class="container" id="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>BUDGET4U</h2>
+                <p>Your pocket accountant!</p>
+            </div>
+            <nav>
+                <a href="{{ url_for('dashboard') }}">Dashboard <img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('transactions') }}">My Transactions <img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('boxes') }}" class="active">My Boxes</a>
+                <a href="#">Settings</a>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header-section">
+                <div class="header-text fraunces-budget">
+                    <h1>My Boxes</h1>
+                </div>
+                <button class="action-btn" id="openCreateBox">
+                    <span>Create a Box</span>
+                    <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}">
+                </button>
+            </header>
+
+            <div class="info-box">
+                <img src="{{ url_for('static', filename='icons/lightbulb-minimalistic-svgrepo-com.svg') }}">
+                <div class="info-text">
+                    <strong>Smart Pots:</strong> These boxes automatically track transactions where the <b>Source</b> matches the <b>Box Name</b>.
+                    <a href="#" class="learn-more-inline">Learn more →</a>
+                </div>
+            </div>
+
+            <div class="box-container" id="box-wrapper">
+                </div>
+        </main>
+    </div>
+
+    <div id="create-box-modal" class="hidden">
+        <button id="closeCreateBox" type="button"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
+        <h2>Create a New Box</h2>
+        <form class="transaction-form" id="create-box-form">
+            <label>Box Name</label>
+            <input type="text" id="box-name" placeholder="e.g. Shop Rent" required>
+
+            <label>Category</label>
+            <select id="box-category">
+                <option value="Asset">Asset</option>
+                <option value="Liability">Liability</option>
+                <option value="Revenue">Revenue</option>
+                <option value="Expense">Expense</option>
+            </select>
+
+            <label>Monthly Budget Goal</label>
+            <input type="number" id="box-budget" placeholder="MK 50,000">
+
+            <button type="submit">Create Box</button>
+        </form>
+    </div>
+
+    <div id="edit-box-modal" class="hidden">
+        <button id="closeEditBox" type="button"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
+        <h2>Edit Box</h2>
+        <form class="transaction-form" id="edit-box-form">
+            <label>Box Name</label>
+            <input type="text" id="edit-box-name">
+
+            <label>Monthly Budget Goal</label>
+            <input type="number" id="edit-box-budget">
+
+            <label>Manual Balance Adjustment</label>
+            <input type="number" id="edit-manual-balance">
+            <p>Use this to fix the starting balance without adding a transaction.</p>
+
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('container');
+            const boxWrapper = document.getElementById('box-wrapper');
+            const createModal = document.getElementById('create-box-modal');
+            const editModal = document.getElementById('edit-box-modal');
+
+            // --- 1. MODAL CONTROLS ---
+            window.toggleModal = (modal, show = true) => {
+                if (show) {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('modal-container');
+                    container.classList.add('blurred');
+                } else {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('modal-container');
+                    container.classList.remove('blurred');
+                }
+            };
+
+            document.getElementById('openCreateBox').onclick = () => toggleModal(createModal, true);
+            document.getElementById('closeCreateBox').onclick = () => toggleModal(createModal, false);
+            document.getElementById('closeEditBox').onclick = () => toggleModal(editModal, false);
+
+            // --- 2. LOAD & RENDER BOXES ---
+            async function loadBoxes() {
+                try {
+                    const res = await fetch('/api/boxes');
+                    const boxes = await res.json();
+                    boxWrapper.innerHTML = '';
+
+                    boxes.forEach(box => {
+                        const goal = box.budget_goal || 1;
+                        const current = box.total_value || 0;
+                        const incomeIn = box.income_in || 0;
+                        const incomeOut = box.income_out || 0;
+                        const percent = Math.min((current / goal) * 100, 100).toFixed(0);
+
+                        boxWrapper.innerHTML += `
+                            <div class="the-box">
+                                <div class="box-header">
+                                    <span class="box-type-label">${box.category}</span>
+                                    <button class="box-settings" onclick="prepareEditModal('${box.id}', '${box.name}', ${box.budget_goal}, ${box.manual_balance || 0})">
+                                        <img src="/static/icons/settings-svgrepo-com.svg">
+                                    </button>
+                                </div>
+                                <h2 class="box-name">${box.name}</h2>
+                                <div class="box-total">
+                                    <span class="total-label">Current Balance</span>
+                                    <div class="total-amount">MK ${current.toLocaleString()}</div>
+                                    <div class="progress-container">
+                                        <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                                    </div>
+                                    <p style="font-size:11px; color:#64748b;">${percent}% of MK ${goal.toLocaleString()} goal</p>
+                                </div>
+                                <div class="box-flow">
+                                    <div class="flow-item">
+                                        <span class="flow-label">IN / MO</span>
+                                        <span class="flow-amount positive">+MK ${incomeIn.toLocaleString()}</span>
+                                    </div>
+                                    <div class="flow-item">
+                                        <span class="flow-label">OUT / MO</span>
+                                        <span class="flow-amount negative">-MK ${incomeOut.toLocaleString()}</span>
+                                    </div>
+                                </div>
+                                <div class="box-footer">
+                                    <button onclick="deleteBox('${box.id}')" class="delete-btn">Delete</button>
+                                    <a href="/transactions?filter=${encodeURIComponent(box.name)}" class="view-history">
+                                        <img src="/static/icons/history-3-svgrepo-com.svg"> HISTORY
+                                    </a>
+                                </div>
+                            </div>`;
+                    });
+                } catch (e) { console.error("Load error", e); }
+            }
+
+            // --- 3. CREATE BOX ---
+            document.getElementById('create-box-form').onsubmit = async (e) => {
+                e.preventDefault();
+                const payload = {
+                    name: document.getElementById('box-name').value,
+                    category: document.getElementById('box-category').value,
+                    budget_goal: parseFloat(document.getElementById('box-budget').value) || 0
+                };
+                const res = await fetch('/api/boxes', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) location.reload();
+            };
+
+            // --- 4. EDIT BOX ---
+            window.prepareEditModal = (id, name, goal, manualBal) => {
+                document.getElementById('edit-box-name').value = name;
+                document.getElementById('edit-box-budget').value = goal;
+                document.getElementById('edit-manual-balance').value = manualBal;
+                document.getElementById('edit-box-form').setAttribute('data-id', id);
+                toggleModal(editModal, true);
+            };
+
+            document.getElementById('edit-box-form').onsubmit = async (e) => {
+                e.preventDefault();
+                const boxId = e.target.getAttribute('data-id');
+                const payload = {
+                    name: document.getElementById('edit-box-name').value,
+                    budget_goal: parseFloat(document.getElementById('edit-box-budget').value) || 0,
+                    manual_balance: parseFloat(document.getElementById('edit-manual-balance').value) || 0
+                };
+                const res = await fetch(`/api/boxes/${boxId}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) location.reload();
+            };
+
+            // --- 5. DELETE BOX ---
+            window.deleteBox = async (id) => {
+                if (confirm("Delete this box?")) {
+                    await fetch(`/api/boxes/${id}`, { method: 'DELETE' });
+                    loadBoxes();
+                }
+            };
+
+            loadBoxes();
+        });
+    </script>
+</body>
+</html>
