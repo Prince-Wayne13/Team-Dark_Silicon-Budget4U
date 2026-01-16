@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='transactions.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces&family=Inter&display=swap" rel="stylesheet">
+
+    <title>B4U | My Transactions</title>
+</head>
+
+<body class="inter-budget">
+    <div class="container">
+
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>BUDGET4U</h2>
+                <p>Your pocket accountant!</p>
+            </div>
+
+            <nav>
+                <a href="{{ url_for('dashboard') }}">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}"></a>
+                <a href="{{ url_for('transactions') }}" class="active">My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}"></a>
+            <a href="{{ url_for('boxes') }}">My Boxes</a>
+                <a href="{{ url_for('settings') }}">Settings</a>
+            </nav>
+        </aside>
+
+        <div id="addModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h2>Add Transaction</h2>
+
+                <input type="date" id="dateInput">
+                <input type="text" id="fromToInput" placeholder="From / To (e.g. Bank -> Food)">
+                <input type="text" id="descriptionInput" placeholder="Description">
+                
+                <select id="directionInput" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                    <option value="Inbound">Inbound (Money In)</option>
+                    <option value="Outbound">Outbound (Money Out)</option>
+                </select>
+
+                <input type="number" id="amountInput" placeholder="Amount">
+
+                <div style="margin-top:10px;">
+                    <button onclick="saveTransaction()">Save</button>
+                    <button onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <header class="header-section">
+                <div class="header-text fraunces-budget">
+                    <h1>My Transactions</h1>
+                    <p>Here's a list of your last transaction history...</p>
+                </div>
+
+                <div class="transaction-actions">
+                    <button class="action-btn btn">
+                        <span>Review Transactions</span>
+                        <img src="{{ url_for('static', filename='icons/review-file-svgrepo-com.svg') }}">
+                    </button>
+
+                    <button class="action-btn btn" onclick="openModal()">
+                        <span>Add Manual Entry</span>
+                        <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}">
+                    </button>
+                    <button class="action-btn btn" onclick="loadTransactions()" id="refreshBtn">
+                        <span>Refresh</span>
+                        <img src="{{ url_for('static', filename='icons/refresh-svgrepo-com.svg') }}" id="refreshIcon">
+                    </button>
+                    <button class="action-btn btn">
+                        <span>Import from SMS/PDF</span>
+                        <img src="{{ url_for('static', filename='icons/import-svgrepo-com.svg') }}">
+                    </button>
+                </div>
+            </header>
+
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search transactions...">
+                <button class="btn">
+                    <img src="{{ url_for('static', filename='icons/search-svgrepo-com.svg') }}">
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reference</th>
+                        <th>Source</th>
+                        <th>Direction</th> <th>Amount (MK)</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-body">
+                    </tbody>
+            </table>
+        </main>
+    </div>
+
+    <script>
+        const tableBody = document.getElementById("transaction-table-body");
+        const modal = document.getElementById("addModal");
+
+        const dateInput = document.getElementById("dateInput");
+        const fromToInput = document.getElementById("fromToInput");
+        const descriptionInput = document.getElementById("descriptionInput");
+        const amountInput = document.getElementById("amountInput");
+
+        
+        async function loadTransactions() {
+                            console.log("Fetching transactions...");
+                            try {
+                                const response = await fetch('/api/transactions');
+                                const transactions = await response.json();
+                                
+                                const tableBody = document.getElementById("transaction-table-body");
+                                tableBody.innerHTML = ""; 
+
+                                transactions.forEach(data => {
+                                    const row = document.createElement("tr");
+                                    
+                                    // Matches the keys we just defined in the Python 'transaction' dictionary
+                                    row.innerHTML = `
+                                        <td>${data.date}</td>
+                                        <td>${data.fromTo}</td>
+                                        <td>${data.description}</td>
+                                        <td>${Number(data.amount).toLocaleString()}</td>
+                                        <td>
+                                            <button onclick="deleteTransaction('${data.id}')" style="border:none; background:none; cursor:pointer;">🗑️</button>
+                                        </td>
+                                    `;
+                                    tableBody.appendChild(row);
+                                });
+                                console.log("Table updated with", transactions.length, "entries.");
+                            } catch (error) {
+                                console.error("JS Load Error:", error);
+                            }
+                        }
+        
+      
+        async function saveTransaction() {
+            const date = dateInput.value;
+            const fromToRaw = fromToInput.value.trim();
+            const description = descriptionInput.value.trim();
+            const amount = amountInput.value;
+
+            if (!date || !fromToRaw || !description || !amount) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            
+            const payload = {
+                "Date": date,
+                "Source": fromToRaw,
+                "Reference": description,
+                "Amount": parseFloat(amount) // Ensure it's a number
+            };
+
+            try {
+                const response = await fetch('/api/transactions', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    clearInputs();
+                    closeModal();
+                    loadTransactions(); // Refresh the table
+                } else {
+                    const errorData = await response.json();
+                    alert("Failed to save: " + (errorData.error || "Unknown error"));
+                }
+            } catch (error) {
+                console.error("Error saving:", error);
+            }
+        }
+
+        // 3. DELETE: Calls your Flask Delete route
+        async function deleteTransaction(id) {
+            // id here is the Firestore document ID
+            if (!confirm("Are you sure you want to delete this entry?")) return;
+
+            try {
+                const response = await fetch('/api/transactions/delete', {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ "transID": id }) // Key must match Python data.get('transID')
+                });
+
+                if (response.ok) {
+                    loadTransactions();
+                } else {
+                    const errorData = await response.json();
+                    alert("Delete failed: " + (errorData.error || "Unknown error"));
+                }
+            } catch (error) {
+                console.error("Error deleting:", error);
+            }
+        }
+
+        // UI Logic
+        function openModal() { modal.style.display = "block"; }
+        function closeModal() { modal.style.display = "none"; }
+        function clearInputs() {
+            dateInput.value = "";
+            fromToInput.value = "";
+            descriptionInput.value = "";
+            amountInput.value = "";
+        }
+
+        // Run on page load
+        loadTransactions();
+
+    </script>
+</body>
+</html>
