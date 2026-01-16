@@ -63,27 +63,70 @@
                 </div>
                 
                 <div class="card daily-expenditure-card">
-                    
-                    <p>Daily Expenditure</p>
+                    <canvas id="categoriesPolarChart"></canvas>
                 </div>
                 
                 <div class="card category-breakdown-card">
-                    <!-- Category breakdown content -->
+                    <canvas id="weeklyExpenseBarChart"></canvas>
                 </div>
-                
-                <button class="btn reports-btn">Reports and Analytics
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                    </svg>
-                </button>
-                <button class="add-transaction-btn btn">Record Transaction
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                </button>
-                <button class="btn ai-advisor-btn">AI financial advisor<img src="../icons/ai-svgrepo-com.svg" alt="AI symbol"></button>
+                <a href="#"  class="ai-advisor-btn">AI Advisor<img src="../icons/icons8-ai.svg" alt="AI symbol"></a>
             </section>
+            <div class="sponsored">
+             <a  target="_blank" href="https://icons8.com/icon/rYb1JFR9WLSh/ai">AI</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+            </div>       
         </main>
     </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
+<script>
+  const ctxa = document.getElementById('weeklyExpenseBarChart');
+  const ctxb = document.getElementById('categoriesPolarChart');
+
+  new Chart(ctxa, {
+    type: 'bar',
+    data: {
+      labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sartuday', 'Sunday'],
+      datasets: [
+        {label: 'Income',
+        data: [12000, 19000, 3000, 15000, 12500, 300, 25000],
+        borderWidth: 1
+        },
+        {label: 'Expenses',
+        data: [1200, 12000, 8000, 18000, 2500, 100, 45000],
+        borderWidth: 1
+        },
+       
+       ] 
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  new Chart (ctxb,{
+    type: 'polarArea',
+    data: {
+      labels: ['Transport', 'Rent', 'Inventory', 'Utilities', 'Tax', 'Marketing'],
+      datasets: [
+        {label: 'Amount',
+        data: [130000, 25000, 3000, 15000, 125000, 100000, 55000],
+        borderWidth: 1,
+        }]
+    },
+    options: {
+        scales: {
+            r: {
+                suggestedMin: 0,
+                suggestedMax: 10
+            }
+        }
+    }
+    }
+  );
+</script>
+
 </html>
