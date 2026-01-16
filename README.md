@@ -7,7 +7,6 @@ Core Infrastructure & Frameworks
 
     Firebase / Google Firestore: Utilized as the primary NoSQL database for real-time transaction storage.
 
-    Jinja2: Used for dynamic HTML templating and frontend/backend integration.
 
 AI & Data Processing
 
