@@ -31,6 +31,21 @@ def boxes():
 def transactions():
     return render_template('transactions.html')
 
+@app.route('/aichatbot')
+def aichatbot():    
+    return render_template('aichatbot.html')
+
+@app.route('/settings')
+def settings():
+    # add
+    
+    return "Settings Page Coming Soon"
+
+@app.route('/help')
+def help():
+    #add
+    return "Help and FAQ Page" 
+
 # --- DATABASE API ROUTES ---
 
 # 1. GET ALL TRANSACTIONS
@@ -126,6 +141,55 @@ def update_transaction():
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+
+@app.route('/api/stats', methods=['GET'])
+def get_stats():
+    uid = "2CNOtZiKmHNsDDgkbcVhLbHAjxS2"
+    try:
+        docs = db_fs.collection('Transactions').document(uid).collection('TransIDs').stream()
+        
+        total_income = 0
+        total_expenditure = 0
+        
+        for doc in docs:
+            data = doc.to_dict()
+            amount = float(data.get('Amount', 0))
+            # Clean the string to handle any accidental spaces
+            direction = str(data.get('Direction', '')).strip().upper()
+            
+            if direction == "INCOMING":
+                total_income += amount
+            elif direction == "OUTGOING":
+                total_expenditure += amount
+                
+        return jsonify({
+            "income": total_income,
+            "expenditure": total_expenditure
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

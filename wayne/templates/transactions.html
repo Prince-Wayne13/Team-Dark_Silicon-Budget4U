@@ -23,8 +23,8 @@
             <nav>
                 <a href="{{ url_for('index') }}">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}"></a>
                 <a href="{{ url_for('transactions') }}" class="active">My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}"></a>
-                <a href="#">My Boxes</a>
-                <a href="#">Settings</a>
+            <a href="{{ url_for('boxes') }}">My Boxes</a>
+                <a href="{{ url_for('settings') }}">Settings</a>
             </nav>
         </aside>
 

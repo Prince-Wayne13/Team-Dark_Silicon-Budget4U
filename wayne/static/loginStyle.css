@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #dfdfdf;
+}
+.loginBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 440px;
+    height: 480px;
+    padding: 40px;
+}
+.loginHeader{
+    text-align: center;
+    margin: 20px 0 40px 0;
+}
+.loginHeader header{
+    font-size: 30px;
+    font-weight: 700;
+    color: #000000;
+}
+.inputBox .inputField{
+    width : 100%;
+    height : 65px;
+    font-size: 20px;
+    padding: 0 30px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 5px 10px 1px rgba(0,0,0,0.5);
+    outline: none;
+    transition: .3s;
+
+}
+.inputBox{
+    width: 100%;
+}
+::placeholder{
+    font-weight: 600;
+    color: #222;
+}
+.inputField:focus{
+    width: 110%;
+
+}
+.forgot{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 40px;
+}
+section{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+}
+#check{
+    margin-right: 10px;
+}
+a{
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: underline;
+}
+section a{
+    color: #555;
+}
+.inputSubmit{
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.submitBtn{
+    width: 100%;
+    height: 65px;
+    background: #2563EB;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: 600;
+}
+.submitBtn:hover{
+    background: #1E40AF;
+    transform: scale(1.05,1);
+}
+.signUp{
+    text-align: center;
+    font-size: 15px;
+    margin-top: 20px;
+}
+.signUp a{
+    color: #000;
+    font-weight: 600;
+}
+.login{
+    text-align: center;
+    font-size: 15px;
+    margin-top: 20px;
+}
+.login a{
+    color: #000;
+    font-weight: 600;
+}

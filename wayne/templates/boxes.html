@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="../icons/budget-svgrepo-com.svg">
-    <link rel="stylesheet" href="../styles/base.css">
-    <link rel="stylesheet" href="../styles/boxes.css">
-    <link rel="stylesheet" href="../styles/modal.css">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icons/budget-svgrepo-com.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='boxes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='modal.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
@@ -23,9 +23,9 @@
                 <p>Your pocket accountant!</p>
             </div>
             <nav>
-                <a href="index.html" >Dashboard<img src="../icons/graph-up-svgrepo-com.svg" alt="Dashboard icon"></a>
-                <a href="transactions.html" >My Transactions<img src="../icons/log-svgrepo-com.svg" alt="Transactions icon"></a>
-                <a href="boxes.html" class="active" >My Boxes
+                <a href="{{ url_for('index') }}">Dashboard<img src="{{ url_for('static', filename='icons/graph-up-svgrepo-com.svg') }}" alt="Dashboard icon"></a>
+                <a href="{{ url_for('transactions') }}">My Transactions<img src="{{ url_for('static', filename='icons/log-svgrepo-com.svg') }}" alt="Transactions icon"></a>
+                <a href="{{ url_for('boxes') }}" class="active">My Boxes
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m7.875 14.25 1.214 1.942a2.25 2.25 0 0 0 1.908 1.058h2.006c.776 0 1.497-.4 1.908-1.058l1.214-1.942M2.41 9h4.636a2.25 2.25 0 0 1 1.872 1.002l.164.246a2.25 2.25 0 0 0 1.872 1.002h2.092a2.25 2.25 0 0 0 1.872-1.002l.164-.246A2.25 2.25 0 0 1 16.954 9h4.636M2.41 9a2.25 2.25 0 0 0-.16.832V12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 12V9.832c0-.287-.055-.57-.16-.832M2.41 9a2.25 2.25 0 0 1 .382-.632l3.285-3.832a2.25 2.25 0 0 1 1.708-.786h8.43c.657 0 1.281.287 1.709.786l3.284 3.832c.163.19.291.404.382.632M4.5 20.25h15A2.25 2.25 0 0 0 21.75 18v-2.625c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125V18a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>
                 </a>
@@ -44,15 +44,15 @@
                 </div>
                 <button class="action-btn btn" id="openCreateBox">
                         <span>Create a Box </span>
-                        <img src="../icons/add-square-svgrepo-com.svg" alt="Add icon">
+                        <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}" alt="Add icon">
                     </button>
             </header>
             <div class="info-box">
-                <img src="../icons/lightbulb-minimalistic-svgrepo-com.svg" alt="Info" class="info-icon-compact">
+                <img src="{{ url_for('static', filename='icons/lightbulb-minimalistic-svgrepo-com.svg') }}" alt="Info" class="info-icon-compact">
                 <div class="info-text">
                     <strong>What are Boxes?</strong> Separate "money pots" for different business expenses. 
                     Track Marketing, Supplies, Utilities, and more in their own Boxes to see exactly where your money goes.
-                    <a href="help.html" class="learn-more-inline">Learn more →</a>
+                    <a href="{{ url_for('help') }}" class="learn-more-inline">Learn more →</a>
                 </div>
             </div>
             <div class="box-container">
@@ -60,7 +60,7 @@
                     <div class="box-header">
                         <span class="box-type-label">REVENUE</span>
                         <button class="box-settings" id="openEditBox">
-                            <img src="../icons/settings-svgrepo-com.svg" alt="History">
+                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="History">
                         </button>
                     </div>
                     <h2 class="box-name">Airtel Money</h2>
@@ -84,7 +84,7 @@
                     </div>
                     <div class="box-footer">
                         <a href="#" class="view-history">
-                            <img src="../icons/history-3-svgrepo-com.svg" alt="History">
+                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
                             VIEW HISTORY
                         </a>
                     </div>
@@ -93,7 +93,7 @@
                     <div class="box-header">
                         <span class="box-type-label">REVENUE</span>
                         <button class="box-settings" id="openEditBox">
-                            <img src="../icons/settings-svgrepo-com.svg" alt="History">
+                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="History">
                         </button>
                     </div>
                     <h2 class="box-name">Mpamba</h2>
@@ -117,7 +117,7 @@
                     </div>
                     <div class="box-footer">
                         <a href="#" class="view-history">
-                            <img src="../icons/history-3-svgrepo-com.svg" alt="History">
+                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
                             VIEW HISTORY
                         </a>
                     </div>
@@ -126,7 +126,7 @@
                     <div class="box-header">
                         <span class="box-type-label">ASSET</span>
                         <button class="box-settings" id="openEditBox">
-                            <img src="../icons/settings-svgrepo-com.svg" alt="Settings">
+                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="Settings">
                         </button>
                     </div>
                     <h2 class="box-name">Stock Inventory</h2>
@@ -149,7 +149,7 @@
                     </div>
                     <div class="box-footer">
                         <a href="#" class="view-history">
-                            <img src="../icons/history-3-svgrepo-com.svg" alt="History">
+                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
                             VIEW HISTORY
                         </a>
                     </div>
@@ -158,7 +158,7 @@
                     <div class="box-header">
                         <span class="box-type-label">EXPENSE</span>
                         <button class="box-settings" id="openEditBox">
-                            <img src="../icons/settings-svgrepo-com.svg" alt="Settings">
+                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="Settings">
                         </button>
                     </div>
                     <h2 class="box-name">Shop Rent</h2>
@@ -181,7 +181,7 @@
                     </div>
                     <div class="box-footer">
                         <a href="#" class="view-history">
-                            <img src="../icons/history-3-svgrepo-com.svg" alt="History">
+                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
                             VIEW HISTORY
                         </a>
                     </div>
@@ -190,7 +190,7 @@
                     <div class="box-header">
                         <span class="box-type-label">SAVINGS</span>
                         <button class="box-settings" id="openEditBox">
-                            <img src="../icons/settings-svgrepo-com.svg" alt="Settings">
+                            <img src="{{ url_for('static', filename='icons/settings-svgrepo-com.svg') }}" alt="Settings">
                         </button>
                     </div>
                     <h2 class="box-name">Emergency Fund</h2>
@@ -213,7 +213,7 @@
                     </div>
                     <div class="box-footer">
                         <a href="#" class="view-history">
-                            <img src="../icons/history-3-svgrepo-com.svg" alt="History">
+                            <img src="{{ url_for('static', filename='icons/history-3-svgrepo-com.svg') }}" alt="History">
                             VIEW HISTORY
                         </a>
                     </div>
@@ -222,7 +222,7 @@
         </main>
     </div>
     <div class="hidden" id="edit-box-modal">
-    <button id="closeEditBox"><img src="../icons/close-square-svgrepo-com.svg"></button>
+    <button id="closeEditBox"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
     <h2>Edit Box</h2>
     <form action="#" class="transaction-form">
         <label for="edit-box-name">Box Name</label>
@@ -246,7 +246,7 @@
     </form>
 </div>
 <div class="hidden" id="create-box-modal">
-    <button id="closeCreateBox"><img src="../icons/close-square-svgrepo-com.svg"></button>
+    <button id="closeCreateBox"><img src="{{ url_for('static', filename='icons/close-square-svgrepo-com.svg') }}"></button>
     <h2>Create a New Box</h2>
     <form action="#" class="transaction-form">
         <label for="box-name">Box Name</label>
@@ -269,6 +269,6 @@
         <button type="submit">Create Box</button>
     </form>
 </div>
-<script src="../scripts/modalmagicboxes.js"></script>
+<script src="{{ url_for('static', filename='scripts/modalmagicboxes.js') }}"></script>
 </body>
 </html>
