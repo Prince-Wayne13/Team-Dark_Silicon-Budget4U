@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Popup Test</title>
+</head>
+<body>
+    <div id="container">
+        <h1>Test Page</h1>
+        <button id="openSmsPopup">Import SMS</button>
+    </div>
+
+    <!-- SMS Info Popup -->
+    <div class="hidden" id="sms-info-popup">
+        <button id="closeSmsInfo"><img src="icons/close-square-svgrepo-com.svg" alt="Close"></button>
+        <div class="popup-content">
+            <h2>Use the Companion App</h2>
+            <p>SMS import is available through our mobile companion app. Download it to automatically sync your transaction messages.</p>
+            <a href="#" class="download-btn">Download App</a>
+        </div>
+    </div>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .modal-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid black;
+            padding: 2rem;
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 10px;
+            z-index: 999;
+        }
+
+        .blurred {
+            filter: blur(5px);
+            pointer-events: none;
+        }
+
+        #closeSmsInfo {
+            align-self: flex-end;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        #closeSmsInfo img {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .popup-content {
+            text-align: center;
+            max-width: 350px;
+        }
+
+        .popup-content h2 {
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .popup-content p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .download-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background-color: #A7C1A8;
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #96b097;
+        }
+    </style>
+
+    <script>
+        const openSmsPopup = document.getElementById('openSmsPopup');
+        const closeSmsInfo = document.getElementById('closeSmsInfo');
+        const smsInfoPopup = document.getElementById('sms-info-popup');
+        const container = document.getElementById('container');
+
+        // Open popup
+        openSmsPopup.addEventListener('click', () => {
+            smsInfoPopup.classList.remove('hidden');
+            smsInfoPopup.classList.add('modal-container');
+            container.classList.add('blurred');
+        });
+
+        // Close popup
+        closeSmsInfo.addEventListener('click', () => {
+            smsInfoPopup.classList.remove('modal-container');
+            smsInfoPopup.classList.add('hidden');
+            container.classList.remove('blurred');
+        });
+    </script>
+</body>
+</html>

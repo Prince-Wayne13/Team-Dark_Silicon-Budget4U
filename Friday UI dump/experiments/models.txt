@@ -1,0 +1,33 @@
+<div class="hidden" id="modal-container">
+            <button id="closeBtn"><img src="../icons/close-square-svgrepo-com.svg"></button>
+            <h2>Record a transaction</h2>
+            <form action="#" class="transaction-form">
+            <label for="amount">Amount (MWK)</label>
+            <input type="text" id="amount" placeholder="0.00" autofocus>
+
+            <label for="from-box">From (Box)</label>
+            <select id="from-box">
+                <option>Airtel Money</option>
+                <option>TNM Mpamba</option>
+                <option>FDH Bank</option>
+                <option>External Revenue</option>
+            </select>
+
+            <label for="to-box">To (Box)</label>
+            <select id="to-box">
+                <option>Transportation</option>
+                <option>Inventory</option>
+                <option>Shop Rent</option>
+                <option>Savings</option>
+            </select>
+
+            <label for="description">Description</label>
+            <input type="text" id="description" placeholder="e.g. Hired truck for furniture">
+
+            <label for="date">Transaction Date</label>
+            <input type="date" id="date" value="2026-01-15">
+
+            <button type="submit">Record</button>
+                        </form>
+    </div>
+
