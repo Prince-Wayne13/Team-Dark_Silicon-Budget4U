@@ -58,18 +58,13 @@
                 </div>
 
                 <div class="transaction-actions">
-                    <button class="action-btn btn">
-                        <span>Review Transactions</span>
-                        <img src="{{ url_for('static', filename='icons/review-file-svgrepo-com.svg') }}">
-                    </button>
-
                     <button class="action-btn btn" onclick="openModal()">
                         <span>Add Manual Entry</span>
                         <img src="{{ url_for('static', filename='icons/add-square-svgrepo-com.svg') }}">
                     </button>
                     <button class="action-btn btn" onclick="loadTransactions()" id="refreshBtn">
-                        <span>Refresh</span>
-                        <img src="{{ url_for('static', filename='icons/refresh-svgrepo-com.svg') }}" id="refreshIcon">
+                        <span>Refresh Transactions</span>
+                        <img src="{{ url_for('static', filename='icons/refresh-cw-alt-3-svgrepo-com.svg') }}" id="refreshIcon">
                     </button>
                     <button class="action-btn btn">
                         <span>Import from SMS/PDF</span>
