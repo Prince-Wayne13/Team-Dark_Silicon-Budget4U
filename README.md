@@ -1,5 +1,26 @@
 #BUDGET4U by DARK SILICON FOR 2026 MSIH HACKATHON
 
+Technical Acknowledgements & API Credits
+Core Infrastructure & Frameworks
+
+    Flask (Python): Used for the backend server architecture and routing.
+
+    Firebase / Google Firestore: Utilized as the primary NoSQL database for real-time transaction storage.
+
+    Jinja2: Used for dynamic HTML templating and frontend/backend integration.
+
+AI & Data Processing
+
+    Google Gemini API: Powering the Fintel AI Assistant for natural language financial queries and SMS data parsing logic.
+
+Data Visualization & Frontend Libraries
+
+    Chart.js: Used to generate the "Spent vs. Earned" bar charts and expense trend line graphs.
+
+    Google Fonts: Utilizing Inter for UI readability and Fraunces for financial branding.
+
+    SVGRepo: Source for all functional UI icons (Navigation, Add, Delete, and Sync).
+
 # Transaction SMS Parser Dashboard
 
 A Flask-based dashboard that fetches SMS data from Firebase Realtime Database, filters for real financial transactions, parses them using AI (Llama 3 / Gemini), and syncs the cleaned data to Google Cloud Firestore.
